@@ -8,19 +8,16 @@
  */
 
 const DoubleLinkedList = require('./doubleLinkedList');
+const ExpressionParserGenerator = require('./expressionParser');
 
-/**
- * 
- */
-class OutputExpressionParser {
 
-  static parseValue(match) {
-    const isText = match.includes('\'') || match.includes('"');
-    const value = match.trim();
+const parseValue = (match) => {
+  const isText = match.includes('\'') || match.includes('"');
+  const value = match.trim();
 
-    return isText ? { type: 'TEXT', value: value.slice(1,-1) } : { type: 'VARIABLE', value };
-  }
+  return isText ? { type: 'TEXT', value: value.slice(1, -1) } : { type: 'VARIABLE', value };
 }
+
 
 /**
  * regex: the regex used to capture an expession
@@ -41,7 +38,7 @@ const expressionTypes = [
       const matchs = match.split('=');
 
       const contextName = matchs[0];
-      const value = OutputExpressionParser.parseValue(matchs[1]);
+      const value = parseValue(matchs[1]);
 
       return { type: 'OUTPUT', contextName, value }
     },
@@ -52,14 +49,14 @@ const expressionTypes = [
       const matchs = match.split('=');
 
       const contextName = matchs[0];
-      const value = OutputExpressionParser.parseValue(matchs[1]);
-  
+      const value = parseValue(matchs[1]);
+
       return { type: 'CODE', contextName, value }
     },
   }
 ];
 
-const regexString = expressionTypes.map(b => b.regex.source).join('|');
+const expressionParser = ExpressionParserGenerator(expressionTypes);
 
 /**
  * OutputExpressionTokenizer
@@ -67,7 +64,7 @@ const regexString = expressionTypes.map(b => b.regex.source).join('|');
 class OutputExpressionTokenizer {
 
   constructor() {
-    this.expressionParser = OutputExpressionParser.parseFromText;
+    this.expressionParser = expressionParser;
   }
 
   /**
@@ -82,11 +79,11 @@ class OutputExpressionTokenizer {
 
     outputTokens.forEach(token => {
       const { text, expression } = token;
-      list.append( { text, expression } );
+      list.append({ text, expression });
     });
 
     return list;
   }
 }
 
-module.exports = { OutputExpressionTokenizer, OutputExpressionParser };
+module.exports = { OutputExpressionTokenizer };
