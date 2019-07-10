@@ -8,7 +8,7 @@
  */
 
 const DoubleLinkedList = require('./doubleLinkedList');
-const ExpressionParserGenerator = require('./expressionParser');
+const { ExpressionParser } = require('./expressionParser');
 
 
 const parseValue = (match) => {
@@ -18,53 +18,48 @@ const parseValue = (match) => {
   return isText ? { type: 'TEXT', value: value.slice(1, -1) } : { type: 'VARIABLE', value };
 }
 
-
-/**
- * regex: the regex used to capture an expession
- * parser: the function used to parse the expession captured
- */
-const expressionTypes = [
-  {
-    regex: /{{([^\=]+?)}}/,
-    parser: (match) => {
-      const contextName = match;
-
-      return { type: 'OUTPUT', contextName }
-    },
-  },
-  {
-    regex: /{{(.+?\=.+?)}}/,
-    parser: (match) => {
-      const matchs = match.split('=');
-
-      const contextName = matchs[0];
-      const value = parseValue(matchs[1]);
-
-      return { type: 'OUTPUT', contextName, value }
-    },
-  },
-  {
-    regex: /<<(.+?\=.+?)>>/,
-    parser: (match) => {
-      const matchs = match.split('=');
-
-      const contextName = matchs[0];
-      const value = parseValue(matchs[1]);
-
-      return { type: 'CODE', contextName, value }
-    },
-  }
-];
-
-const expressionParser = ExpressionParserGenerator(expressionTypes);
-
 /**
  * OutputExpressionTokenizer
  */
 class OutputExpressionTokenizer {
 
   constructor() {
-    this.expressionParser = expressionParser;
+    /**
+     * regex: the regex used to capture an expession
+     * parser: the function used to parse the expession captured
+     */
+    this.expressionParser = new ExpressionParser([
+      {
+        regex: /{{([^\=]+?)}}/,
+        parser: (match) => {
+          const contextName = match;
+    
+          return { type: 'OUTPUT', contextName }
+        },
+      },
+      {
+        regex: /{{(.+?\=.+?)}}/,
+        parser: (match) => {
+          const matchs = match.split('=');
+    
+          const contextName = matchs[0];
+          const value = parseValue(matchs[1]);
+    
+          return { type: 'OUTPUT', contextName, value }
+        },
+      },
+      {
+        regex: /<<(.+?\=.+?)>>/,
+        parser: (match) => {
+          const matchs = match.split('=');
+    
+          const contextName = matchs[0];
+          const value = parseValue(matchs[1]);
+    
+          return { type: 'CODE', contextName, value }
+        },
+      }
+    ]);
   }
 
   /**
@@ -75,7 +70,7 @@ class OutputExpressionTokenizer {
    */
   tokenize(stream, list = new DoubleLinkedList(), normalize = false) {
 
-    const outputTokens = this.expressionParser(stream);
+    const outputTokens = this.expressionParser.parseFromText(stream);
 
     outputTokens.forEach(token => {
       const { text, expression } = token;

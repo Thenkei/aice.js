@@ -8,45 +8,12 @@
  */
 
 const DoubleLinkedList = require('./doubleLinkedList');
-const ExpressionParserGenerator = require('./expressionParser');
-
-
-/**
- * regex: the regex used to capture an expession
- * parser: the function used to parse the expession captured
- */
-const expressionTypes = [
-  {
-    regex: /{{(.+?\=.+?)}}/,
-    parser: (match) => {
-      const matchs = match.split('=');
-
-    const expression = expressionParser(matchs[1])[0];
-    const contextName = matchs[0];
-
-    return { ...expression, contextName }
-    },
-  },
-  {
-    regex: /(\*)/,
-    parser: () => ( { type: 'ANY' } ),
-  },
-  {
-    regex: /(\^)/,
-    parser: () => ( { type: 'ANYORNOTHING' } ),
-  },
-  {
-    regex: /\@(.+)/,
-    parser: (match) => ( { type: 'ENTITY', entityType: match } ),
-  },
-];
-
-const expressionParser = ExpressionParserGenerator(expressionTypes);
+const { ExpressionParser } = require('./expressionParser');
 
 //=====
 
 const isSeparator = (charToken) =>
-    (charToken < "0" || (charToken > "9" && charToken < "A") ||
+  (charToken < "0" || (charToken > "9" && charToken < "A") ||
     (charToken > "Z" && charToken < "a") ||
     (charToken > "}" && charToken.charCodeAt(0) < 127) ||
     (charToken < "!"));
@@ -57,7 +24,35 @@ const isSeparator = (charToken) =>
 class InputExpressionTokenizer {
 
   constructor() {
-    this.expressionParser = expressionParser;
+    /**
+     * regex: the regex used to capture an expession
+     * parser: the function used to parse the expession captured
+     */
+    this.expressionParser = new ExpressionParser([
+      {
+        regex: /{{(.+?\=.+?)}}/,
+        parser: (match) => {
+          const matchs = match.split('=');
+
+          const expression = this.expressionParser.parseFromText(matchs[1])[0];
+          const contextName = matchs[0];
+
+          return { ...expression, contextName }
+        },
+      },
+      {
+        regex: /(\*)/,
+        parser: () => ({ type: 'ANY' }),
+      },
+      {
+        regex: /(\^)/,
+        parser: () => ({ type: 'ANYORNOTHING' }),
+      },
+      {
+        regex: /\@(.+)/,
+        parser: (match) => ({ type: 'ENTITY', entityType: match }),
+      },
+    ]);
   }
 
   /**
@@ -68,28 +63,29 @@ class InputExpressionTokenizer {
    */
   tokenize(stream, list = new DoubleLinkedList(), normalize = true) {
     const normalized = normalize
-    ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
-    : stream;
+      ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      : stream;
 
     const appendToken = (acc) => { if (acc.text !== "") { list.append(acc); } };
 
     // Run InputExpressionParser on normalized input
-    const inputTokens = this.expressionParser(normalized);
-    
+    const inputTokens = this.expressionParser.parseFromText(normalized);
+
+
     inputTokens.forEach(token => {
       const { text, expression } = token;
-     
+
       // CASE - Token is already expressed
       if (expression) {
-        appendToken( { text, expression } );
+        appendToken({ text, expression });
         return;
       }
-      
+
       // CASE - text may need more tokenization
       let word = "";
       for (const charToken of text) {
         if (isSeparator(charToken)) {
-          appendToken( { text: word, expression } );
+          appendToken({ text: word, expression });
           word = "";
         } else {
           word += charToken;

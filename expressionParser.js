@@ -4,14 +4,17 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  * 
- * Authors: Morgan Perre, Jeff Ladiray
+ * Authors: Morgan Perre, Jeff Ladiray, Arnaud Moncel
  */
 
-const ExpressionParserGenerator = (expressionTypes) => {
-  const regexString = expressionTypes.map(b => b.regex.source).join('|');
+class ExpressionParser {
+  constructor(expressionTypes) {
+    this.expressionTypes = expressionTypes;
+    this.regexString = this.expressionTypes.map(b => b.regex.source).join('|');
+  }
 
-  return (textToParse) => {
-    const regex = new RegExp(regexString, 'g');
+  parseFromText(textToParse) {
+    const regex = new RegExp(this.regexString, 'g');
 
     let index = 0;
     const children = [];
@@ -27,7 +30,7 @@ const ExpressionParserGenerator = (expressionTypes) => {
       const firstElement = match.shift(); // Remove first element who is the global match for get only captured groups
       const type = match.findIndex(e => e); // Get the block type
       if (type !== -1) {
-        children.push({ text: firstElement, expression: expressionTypes[type].parser(match[type]) });
+        children.push({ text: firstElement, expression: this.expressionTypes[type].parser(match[type]) });
       }
 
       index = regex.lastIndex;
@@ -42,6 +45,7 @@ const ExpressionParserGenerator = (expressionTypes) => {
 
     return children;
   }
+
 }
 
-module.exports = ExpressionParserGenerator;
+module.exports = { ExpressionParser };
