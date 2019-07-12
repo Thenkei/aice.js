@@ -3,17 +3,17 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- * 
+ *
  * Authors: Morgan Perre
  */
 
 class DoubleLinkedListNode {
-  constructor(value, next = null, prev = null){
-		this.value = value,
-		this.next = next,
-		this.prev = prev
+  constructor(value, next = null, prev = null) {
+    this.value = value;
+    this.next = next;
+    this.prev = prev;
   }
-  
+
   hasNext() {
     return !!this.next;
   }
@@ -23,11 +23,10 @@ class DoubleLinkedListNode {
   }
 }
 
-const head = Symbol("head");
-const tail = Symbol("tail");
+const head = Symbol('head');
+const tail = Symbol('tail');
 
 class DoubleLinkedList {
-
   constructor() {
     this[head] = null;
     this[tail] = null;
@@ -45,21 +44,20 @@ class DoubleLinkedList {
     }
   }
 
-  get(index) {
+  get(index = 0) {
     if (index < 0) {
       return undefined;
     }
     let current = this[head];
     let i = 0;
-    while ((current !== null) && (i < index)) {
+    while (current !== null && i < index) {
       current = current.next;
-      i++;
+      i += 1;
     }
     return current !== null ? current : undefined;
   }
 
   *values() {
-
     let current = this[head];
 
     while (current !== null) {
@@ -69,7 +67,6 @@ class DoubleLinkedList {
   }
 
   *lists() {
-
     let current = this[head];
 
     while (current !== null) {

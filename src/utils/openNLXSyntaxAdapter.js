@@ -3,22 +3,22 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- * 
+ *
  * Authors: Morgan Perre, Arnaud Moncel
  */
 
-//----- Inline Syntax Adapter (Callable)
+// ----- Inline Syntax Adapter (Callable)
 const callableRegex = new RegExp(/{{(.+?)\((.+?)\)}}|<<(.+?)\((.+?)\)>>/, 'g');
 const paramsRegex = new RegExp(/ *`(.+?)` *,| *(.+?) *,| *(.+) */, 'g');
 const variableRegex = new RegExp(/{\$(.+?)}| *\$(\w+) */, 'g');
 
-const parseAdaptInlineSyntax = (text) => {
+const parseAdaptInlineSyntax = text => {
   const callables = [];
-  let newInlineText = "";
+  let newInlineText = '';
   let indexInlineBuilder = 0;
   let matchCallable = callableRegex.exec(text);
   while (matchCallable) {
-    const [, gService, gCallableParams, sService, sCallableParams ] = matchCallable;
+    const [, gService, gCallableParams, sService, sCallableParams] = matchCallable;
     const callable = {
       service: gService || sService,
       parameters: [],
@@ -35,8 +35,7 @@ const parseAdaptInlineSyntax = (text) => {
 
       let index = 0;
       while (matchVariable) {
-        const text = params.slice(index, matchVariable.index);
-        parameters += text;
+        parameters += params.slice(index, matchVariable.index);
 
         matchVariable.shift();
         const variable = matchVariable.find(mp => mp);
@@ -46,8 +45,7 @@ const parseAdaptInlineSyntax = (text) => {
         matchVariable = variableRegex.exec(params);
       }
 
-      const text = params.slice(index, params.length);
-      parameters += text;
+      parameters += params.slice(index, params.length);
 
       callable.parameters.push(parameters);
       matchParam = paramsRegex.exec(callableParams);
@@ -67,13 +65,13 @@ const parseAdaptInlineSyntax = (text) => {
   newInlineText += text.slice(indexInlineBuilder, text.length);
 
   return { callables, newInlineText };
-}
+};
 
-//----- Outputs Adapter
-const parseAdaptOutputsSyntax = (oldOutputs) => {
+// ----- Outputs Adapter
+const parseAdaptOutputsSyntax = oldOutputs => {
   const outputs = [];
-  for (oldOutput of oldOutputs) {
-    if (typeof oldOutput === "string") {
+  oldOutputs.forEach(oldOutput => {
+    if (typeof oldOutput === 'string') {
       // Without Condition
       const output = { conditions: [], WSs: [] };
 
@@ -84,7 +82,7 @@ const parseAdaptOutputsSyntax = (oldOutputs) => {
       outputs.push(output);
     } else {
       // Conditions
-      for (conditionOutput of oldOutput.children) {
+      oldOutput.children.forEach(conditionOutput => {
         const output = { conditions: [], WSs: [] };
         const condition = { operande: 'eq', Lvalue: `{{${conditionOutput.name}}}`, Rvalue: conditionOutput.value };
 
@@ -94,27 +92,27 @@ const parseAdaptOutputsSyntax = (oldOutputs) => {
         output.conditions.push(condition);
 
         outputs.push(output);
-      }
+      });
     }
-  }
+  });
   return outputs;
-}
+};
 
-//----- Inputs Adapter
-const parseAdaptInputsSyntax = (oldInputs) => {
+// ----- Inputs Adapter
+const parseAdaptInputsSyntax = oldInputs => {
   const inputs = [];
-  for (oldInput of oldInputs) {
+  oldInputs.forEach(oldInput => {
     const input = { inputMessage: oldInput };
 
     inputs.push(input);
-  }
+  });
   return inputs;
-}
+};
 
-//----- Intent Adapter
-const parseAdaptIntentSyntax = (oldIntents) => {
+// ----- Intent Adapter
+const parseAdaptIntentSyntax = oldIntents => {
   const intents = [];
-  for (oldIntent of oldIntents) {
+  oldIntents.forEach(oldIntent => {
     const { id, name, topic, previous, input, output, order } = oldIntent;
 
     const intent = { id, name, topic, previous, order, outputType: 'multiple' };
@@ -122,19 +120,19 @@ const parseAdaptIntentSyntax = (oldIntents) => {
     intent.outputs = parseAdaptOutputsSyntax(output);
 
     intents.push(intent);
-  }
+  });
   return intents;
-}
+};
 
-//----- Document OpenNLXSyntax Adapter
-const parseAdaptOpenNLXSyntax = (oldBotDocument) => {
+// ----- Document OpenNLXSyntax Adapter
+const parseAdaptOpenNLXSyntax = oldBotDocument => {
   const { name } = oldBotDocument;
-  const botId = (oldBotDocument.intents[0] || {}).botId;
+  const { botId } = oldBotDocument.intents[0] || {};
   const intents = parseAdaptIntentSyntax(oldBotDocument.intents);
 
   const document = { name, botId, timestamp: new Date(), intents };
 
   return document;
-}
+};
 
 module.exports = parseAdaptOpenNLXSyntax;
