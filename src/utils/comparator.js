@@ -57,7 +57,7 @@ class Comparator {
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
   compare(linkedListI, linkedListU) {
-    let result = { context: [], match: false, done: false, confidence: 1.0 };
+    let result = { context: [], match: false, confidence: 1.0 };
 
     // Simpliest strict word token equality check
     result.match = [...linkedListI.values()].equalsText([...linkedListU.values()]);
@@ -65,30 +65,32 @@ class Comparator {
     // Expressioned equality check
     if (!result.match) {
       result.match = true;
-      result.iteratorI = linkedListI.get(0);
-      result.iteratorU = linkedListU.get(0);
 
-      while (result.match && !result.done) {
+      result.iteratorGeneratorI = linkedListI.values();
+      result.iteratorGeneratorU = linkedListU.values();
+      result.iteratorI = result.iteratorGeneratorI.next();
+      result.iteratorU = result.iteratorGeneratorU.next();
+
+      while (result.match && !result.iteratorI.done) {
         result = this.compareExpressions(result);
 
-        if (!result.done) {
-          result.iteratorI = result.iteratorI.next;
-          result.iteratorU = result.iteratorU.next;
-        }
-
         // Do we need to process next tokens
-        result.done = !result.iteratorI;
+        if (!result.iteratorI.done) {
+          result.iteratorI = result.iteratorGeneratorI.next();
+          result.iteratorU = result.iteratorGeneratorU.next();
+        }
       }
 
-      // It only match if the iterators are both null (at the end of each sentences)
+      // It only match if the iterators are both done (at the end of each sentences)
       if (result.match) {
-        result.match = !result.iteratorI && !result.iteratorU;
+        result.match = result.iteratorI.done && result.iteratorU.done;
       }
 
       // Delete iterator from result
+      delete result.iteratorGeneratorI;
+      delete result.iteratorGeneratorU;
       delete result.iteratorI;
       delete result.iteratorU;
-      delete result.done;
     }
 
     return result;
@@ -101,7 +103,6 @@ class Comparator {
    */
   compareExpressions(resultState) {
     let result = resultState;
-
     const { expression, text } = result.iteratorI.value;
 
     // Case iteratorI contains an expression
@@ -117,7 +118,7 @@ class Comparator {
 
       case 'ENTITY':
         {
-          if (!result.iteratorU) {
+          if (result.iteratorU.done) {
             result.match = false;
             break;
           }
@@ -133,7 +134,7 @@ class Comparator {
         break;
 
       default: {
-        if (!result.iteratorU) {
+        if (result.iteratorU.done) {
           result.match = false;
           break;
         }
@@ -161,36 +162,34 @@ class Comparator {
       result.iteratorI.value.expression.contextName || result.iteratorI.value.expression.type.toLowerCase();
 
     // Iterate on Input
-    result.iteratorI = result.iteratorI.next;
+    result.iteratorI = result.iteratorGeneratorI.next();
 
     // case Not Last Token in Input
-    if (result.iteratorI !== null) {
+    if (!result.iteratorI.done) {
       // Case ANY - At least one token needed
       if (caseAny) {
         text += result.iteratorU.value.text;
-        result.iteratorU = result.iteratorU.next;
+        result.iteratorU = result.iteratorGeneratorU.next();
       }
       // Iterate until same expression or end of sentence
-      while (result.iteratorU !== null && !this.compareExpressions(result).match) {
+      while (!result.iteratorU.done && !this.compareExpressions(result).match) {
         const { text: textU } = result.iteratorU.value;
         text += (!text && textU) || ` ${textU}`;
-        result.iteratorU = result.iteratorU.next;
+        result.iteratorU = result.iteratorGeneratorU.next();
       }
 
-      result.done = result.iteratorU === null;
-      if (!result.done) {
+      if (!result.iteratorU.done) {
         result.match = this.compareExpressions(result).match;
       }
 
       // case Ending Token in Input
     } else {
       // Iterate until end of sentence
-      while (result.iteratorU) {
+      while (!result.iteratorU.done) {
         const { text: textU } = result.iteratorU.value;
         text += (!text && textU) || ` ${textU}`;
-        result.iteratorU = result.iteratorU.next;
+        result.iteratorU = result.iteratorGeneratorU.next();
       }
-      result.done = true;
 
       // Case ANY - At least one token needed
       if (caseAny) {
