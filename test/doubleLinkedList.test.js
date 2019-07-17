@@ -107,6 +107,6 @@ describe('DoubleLinkedList Iterator', () => {
     list.append('yellow');
 
     expect(...list.values()).to.equal('red');
-    // TODO ... stream gestion
+    // TODO ... stream tests gestion
   });
 });

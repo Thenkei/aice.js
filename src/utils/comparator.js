@@ -6,6 +6,7 @@
  */
 
 const Levenshtein = require('./levenshtein');
+const Damerau = require('./damerau');
 const ContextMutator = require('./contextMutator');
 
 class ExactComparator {
@@ -23,6 +24,20 @@ class LevenshteinComparator {
     result.score = levenshteinScore !== 0 ? (a.length - levenshteinScore) / a.length : 1.0;
 
     result.match = result.score > threshold;
+    return result;
+  }
+}
+
+class DamerauLevenshteinComparator {
+  static compare(a, b) {
+    const result = {};
+
+    const damerauScore = Damerau.distance(a.toLowerCase(), b.toLowerCase());
+    result.score = damerauScore !== 0 ? (a.length - damerauScore) / a.length : 1.0;
+
+    // Possible rule based on score - using a cut off on DamerauScore
+    const cutoffDamerauScore = a.length > 5 ? Math.floor(a.length / 2) - 1 : Math.floor(a.length / 2);
+    result.match = damerauScore <= cutoffDamerauScore;
     return result;
   }
 }
@@ -62,7 +77,7 @@ class Comparator {
         }
 
         // Do we need to process next tokens
-        result.done = !result.iteratorI || !result.iteratorU;
+        result.done = !result.iteratorI;
       }
 
       // It only match if the iterators are both null (at the end of each sentences)
@@ -102,6 +117,10 @@ class Comparator {
 
       case 'ENTITY':
         {
+          if (!result.iteratorU) {
+            result.match = false;
+            break;
+          }
           const { ner, text: textU } = result.iteratorU.value;
           result.match = expression.entityType === ner.entityType;
 
@@ -114,6 +133,10 @@ class Comparator {
         break;
 
       default: {
+        if (!result.iteratorU) {
+          result.match = false;
+          break;
+        }
         const { text: textU } = result.iteratorU.value;
         const res = this.comparator(text.toLowerCase(), textU.toLowerCase());
         result.match = res.match;
@@ -185,4 +208,4 @@ class Comparator {
 /* eslint no-extend-native: ["error", { "exceptions": ["Array"] }] */
 Array.prototype.equalsText = a => this.length === a.length && this.every((t, i) => t.text === a[i].text);
 
-module.exports = { Comparator, LevenshteinComparator };
+module.exports = { Comparator, LevenshteinComparator, DamerauLevenshteinComparator };

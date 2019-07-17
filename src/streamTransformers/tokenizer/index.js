@@ -7,8 +7,10 @@
 
 const ComplexeTokenizer = require('./complexeTokenizer');
 const SimpleTokenizer = require('./simpleTokenizer');
+const NERTokenizer = require('./nerTokenizer');
 
 module.exports = {
   ComplexeTokenizer,
   SimpleTokenizer,
+  NERTokenizer,
 };

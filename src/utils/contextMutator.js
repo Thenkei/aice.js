@@ -1,8 +1,9 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable no-param-reassign */
 class ContextMutator {
   static addVariableToContext(context, variable) {
-    if (context && context[variable.name]) {
-      if (context[`${variable.name}_1`]) {
+    if (context && context.hasOwnProperty(variable.name)) {
+      if (context.hasOwnProperty(`${variable.name}_1`)) {
         const [, index] = Object.keys(context)
           .map(k => (k.indexOf('_') ? k : null))
           .filter(v => v)

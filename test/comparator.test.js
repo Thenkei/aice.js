@@ -2,7 +2,7 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { Comparator, LevenshteinComparator } = require('../src/utils/');
+const { Comparator, LevenshteinComparator, DamerauLevenshteinComparator } = require('../src/utils/');
 
 const { InputExpressionTokenizer } = require('../src/streamTransformers/expression/');
 
@@ -100,7 +100,7 @@ describe('Levenshtein Comparator', () => {
     // expect(result.confidence).to.equal(0.9);
   });
 
-  it("Shouldn't match Sentences with typing error", () => {
+  it("Shouldn't match Sentences with too many typing error", () => {
     const input = 'Hello';
     const utterance = 'Hemmi';
 
@@ -108,6 +108,93 @@ describe('Levenshtein Comparator', () => {
     const sentenceU = tokenizerUtterance.tokenize(utterance);
 
     const result = levenshteinComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(false);
+    // expect(result.confidence).to.equal(0.9);
+  });
+});
+
+describe('Demerau-Levenshtein Comparator', () => {
+  const damerauComparator = new Comparator(DamerauLevenshteinComparator);
+  it('Should match Sentences with typing error', () => {
+    const input = 'Hello';
+    const utterance = 'Helli';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = damerauComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    // expect(result.confidence).to.equal(0.9);
+  });
+
+  it('Should match Complexe Sentences with typing error', () => {
+    const input = '^my name is {{name=*}} shady ^';
+    const utterance = 'Hello, my nqme is slime shady !!! Some text';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = damerauComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    // expect(result.confidence).to.equal(0.9);
+  });
+
+  it('Should match Complexe Sentences with typing error 2', () => {
+    const input = '^my name is {{name=*}} shady ^';
+    const utterance = 'Hello, my nqme is slime shody !!!!!! REPU';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = damerauComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    // expect(result.confidence).to.equal(0.9);
+  });
+
+  it("Shouldn't match Sentences with too many typing error", () => {
+    const input = 'Hello';
+    const utterance = 'Hemmi';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = damerauComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(false);
+    // expect(result.confidence).to.equal(0.9);
+  });
+
+  it('Should match Sentences with pertutations', () => {
+    const input = 'Hello my friend';
+    const utterance = 'ehlol ym nriend';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = damerauComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    // expect(result.confidence).to.equal(0.9);
+  });
+
+  it('Should match Sentences with pertutations', () => {
+    const input = 'Hello my friend';
+    const utterance = 'ehlol ym nrined';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = damerauComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    // expect(result.confidence).to.equal(0.9);
+  });
+
+  it("Shouldn't match Sentences", () => {
+    const input = 'sandwichs';
+    const utterance = 'catacombes';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = damerauComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
     // expect(result.confidence).to.equal(0.9);
   });
@@ -182,6 +269,32 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
   it('Compare "Hello ^" to "Hello Bob!" should be true', () => {
     const input = 'Hello ^';
     const utterance = 'Hello Bob!';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.confidence).to.equal(1.0);
+    expect(result.context.anyornothing).to.equal('Bob');
+  });
+
+  it('Compare "^Hello^" to "Hello" should be true', () => {
+    const input = '^Hello^';
+    const utterance = 'Hello';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.confidence).to.equal(1.0);
+    expect(result.context.anyornothing).to.equal('');
+  });
+
+  it('Compare "^Hello^" to "Hello Bob!" should be true', () => {
+    const input = '^Hello^';
+    const utterance = 'Bob Hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(utterance);

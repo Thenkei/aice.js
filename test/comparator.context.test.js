@@ -103,10 +103,7 @@ describe('Context Comparator', () => {
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
-    expect(result.context.anyornothing).to.equal('awesome');
-    // Not sure about this comportement
-    // Talk to Jeff/Arnaud/Leto/Emilie
-    // ONLY IN ANYORNOTHING CASE
-    // I think we should have context.anyornothing = '' and context.anyornothing_1 = 'awesome'
+    expect(result.context.anyornothing).to.equal('');
+    expect(result.context.anyornothing_1).to.equal('awesome');
   });
 });
