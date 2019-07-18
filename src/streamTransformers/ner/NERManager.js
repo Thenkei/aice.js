@@ -48,13 +48,13 @@ class NERManager {
     const entities = this.findEntitiesFromUtterance(lang, utterance, whitelist);
     let result = '';
     let index = 0;
-    const sortEntities = entities.sort((e1, e2) => e1.index - e2.index);
+    const sortEntities = entities.sort((e1, e2) => e1.start - e2.start);
     sortEntities.forEach(e => {
       const entity = e;
-      const beginning = utterance.slice(index, entity.index);
-      index = entity.index + entity.match.length;
+      const beginning = utterance.slice(index, entity.start);
+      index = e.end;
       result += beginning;
-      result += `@{{${e.scope}.${e.type}.${e.name}}}`;
+      result += `@{{${e.name}}}`;
     });
 
     result += utterance.slice(index);

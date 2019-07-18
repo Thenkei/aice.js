@@ -7,7 +7,7 @@
  * Authors: Morgan Perre
  */
 
-const DoubleLinkedList = require('../doubleLinkedList');
+const { DoubleLinkedList } = require('../models/');
 const { ExpressionParser } = require('./expressionParser');
 
 const isSeparator = charToken =>
@@ -48,7 +48,7 @@ class InputExpressionTokenizer {
       },
       {
         regex: /@(.+)/,
-        parser: match => ({ type: 'ENTITY', entityType: match }),
+        parser: match => ({ type: 'ENTITY', name: match }),
       },
     ]);
   }

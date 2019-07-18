@@ -1,0 +1,69 @@
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * Authors: Morgan Perre
+ */
+
+const { DoubleLinkedList } = require('../models/');
+
+const isSeparator = charToken =>
+  charToken === '*' ||
+  charToken < '0' ||
+  (charToken > '9' && charToken < 'A') ||
+  (charToken > 'Z' && charToken < 'a') ||
+  (charToken > 'z' && charToken.charCodeAt(0) < 127) ||
+  charToken < '!';
+
+class NERTokenizer {
+  constructor(lang, namedEntityRecognizer) {
+    if (!namedEntityRecognizer && !lang) {
+      throw new Error('Invalid NERTokenizer constructor - NamedEntityRecognizer & lang are required');
+    }
+    this.namedEntityRecognizer = namedEntityRecognizer;
+    this.lang = lang;
+  }
+
+  tokenize(stream, list = new DoubleLinkedList(), normalize = true) {
+    const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
+    const appendToken = (acc, entity = undefined) => {
+      if (acc !== '') {
+        list.append({ text: acc, ner: entity });
+      }
+    };
+
+    const entities = this.namedEntityRecognizer.findEntitiesFromUtterance(this.lang, normalized);
+    const sortEntities = entities.sort((e1, e2) => e1.start - e2.start);
+
+    let acc = '';
+    let index = 0;
+    let entity = null;
+    for (const charToken of normalized) {
+      if (!entity) {
+        entity = sortEntities.shift();
+      }
+
+      if (entity && index === entity.end - 1) {
+        acc += charToken;
+        appendToken(acc, entity);
+        entity = null;
+        acc = '';
+      } else if (isSeparator(charToken) && (!entity || index < entity.start)) {
+        appendToken(acc);
+        acc = '';
+      } else {
+        acc += charToken;
+      }
+
+      // Increment index
+      index += 1;
+    }
+
+    appendToken(acc);
+    return list;
+  }
+}
+
+module.exports = NERTokenizer;

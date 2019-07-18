@@ -9,7 +9,7 @@ const NamedEntity = require('./NamedEntity');
 const Entity = require('./Entity');
 
 class EnumEntity extends NamedEntity {
-  constructor({ name, scope, enumeration }) {
+  constructor({ name, scope, enumeration, resolve }) {
     if (!enumeration || enumeration.length < 1) {
       throw new Error('Invalid Entity constructor - Missing enum');
     }
@@ -17,6 +17,7 @@ class EnumEntity extends NamedEntity {
       name,
       scope,
       type: 'enum',
+      resolve,
     });
 
     this.addParameter({ enumeration });
@@ -46,8 +47,9 @@ class EnumEntity extends NamedEntity {
             confidence: 1,
             type: this.type,
             name: this.name,
-            index: located,
-            scope: this.scope,
+            start: located,
+            end: located + le.length,
+            resolution: typeof this.resolve === 'function' ? this.resolve(le) : le,
           });
           extracted.push(entity);
         }

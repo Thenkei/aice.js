@@ -11,13 +11,14 @@
  */
 
 class Entity {
-  constructor({ match, confidence, type, name, index, scope }) {
+  constructor({ match, confidence, type, name, resolution, start, end }) {
     this.match = match;
     this.confidence = confidence;
     this.type = type;
     this.name = name;
-    this.index = index;
-    this.scope = scope;
+    this.resolution = resolution;
+    this.start = start;
+    this.end = end;
   }
 }
 

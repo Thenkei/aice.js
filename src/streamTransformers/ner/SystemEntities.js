@@ -6,6 +6,7 @@
  */
 
 const RegExpEntity = require('./RegExpEntity');
+const { PhoneNumberEntity } = require('./ruleBasedEntities');
 
 const SYSTEM_SCOPE = 'system';
 
@@ -14,6 +15,7 @@ const EmailRegExpEntity = new RegExpEntity({
   scope: SYSTEM_SCOPE,
   name: 'email',
   regex: /\b(\w[-._\w]*\w@\w[-._\w]*\w\.\w{2,3})\b/gi,
+  resolve: v => v.toLowerCase(),
 });
 const UrlRegExpEntity = new RegExpEntity({
   id: '@url',
@@ -28,19 +30,14 @@ const EmojiRegExpEntity = new RegExpEntity({
   regex: /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi,
 });
 
-const PhoneNumberRegExpEntity = new RegExpEntity({
-  id: '@phonenumber',
-  scope: SYSTEM_SCOPE,
-  name: 'phonenumber',
-  regex: /([0-9]{10})/gi,
-});
+const PhoneNumberRuleBasedEntity = new PhoneNumberEntity();
 
-const getSystemEntities = () => [EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRegExpEntity];
+const getSystemEntities = () => [EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRuleBasedEntity];
 
 module.exports = {
   EmailRegExpEntity,
   UrlRegExpEntity,
   EmojiRegExpEntity,
-  PhoneNumberRegExpEntity,
+  PhoneNumberRuleBasedEntity,
   getSystemEntities,
 };

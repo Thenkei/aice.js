@@ -7,7 +7,7 @@
  * Authors: Morgan Perre
  */
 
-const DoubleLinkedList = require('../doubleLinkedList');
+const { DoubleLinkedList } = require('../models/');
 
 class SimpleTokenizer {
   static tokenize(stream, list = new DoubleLinkedList(), normalize = true) {

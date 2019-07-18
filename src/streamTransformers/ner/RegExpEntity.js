@@ -9,7 +9,7 @@ const NamedEntity = require('./NamedEntity');
 const Entity = require('./Entity');
 
 class RegExpEntity extends NamedEntity {
-  constructor({ name, scope, regex }) {
+  constructor({ name, scope, regex, resolve }) {
     if (!regex) {
       throw new Error('Invalid Entity constructor - Missing regex');
     }
@@ -17,6 +17,7 @@ class RegExpEntity extends NamedEntity {
       name,
       scope,
       type: 'regex',
+      resolve,
     });
     this.addParameter({ regex });
   }
@@ -37,13 +38,15 @@ class RegExpEntity extends NamedEntity {
     let match;
     // eslint-disable-next-line no-cond-assign
     while ((match = regex.exec(utterance)) !== null) {
+      const v = match[0];
       const entity = new Entity({
-        match: match[0],
+        match: v,
         confidence: 1,
-        scope: this.scope,
         type: this.type,
         name: this.name,
-        index: match.index,
+        start: match.index,
+        end: match.index + v.length,
+        resolution: typeof this.resolve === 'function' ? this.resolve(v) : v,
       });
       extracted.push(entity);
     }

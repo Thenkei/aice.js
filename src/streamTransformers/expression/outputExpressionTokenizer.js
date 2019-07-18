@@ -7,7 +7,7 @@
  * Authors: Morgan Perre
  */
 
-const DoubleLinkedList = require('../doubleLinkedList');
+const { DoubleLinkedList } = require('../models/');
 const { ExpressionParser } = require('./expressionParser');
 
 const parseValue = match => {
