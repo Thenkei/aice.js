@@ -5,8 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const AICE = require('./aice/AICE');
+class Utils {
+  static flatten(array) {
+    return array.reduce((x, y) => x.concat(Array.isArray(y) ? Utils.flatten(y) : y), []);
+  }
+}
 
-module.exports = {
-  AICE,
-};
+module.exports = Utils;

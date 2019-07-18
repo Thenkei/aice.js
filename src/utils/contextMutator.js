@@ -1,6 +1,23 @@
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 /* eslint-disable no-prototype-builtins */
 /* eslint-disable no-param-reassign */
 class ContextMutator {
+  /**
+   * Add variable to context - re-affect context !
+   */
+  static addToContext(context, variable) {
+    context[variable.name] = variable.value;
+  }
+
+  /**
+   * Add variable to context - Don't re-affect context, create new variable.name_1, variable.name_2...
+   */
   static addVariableToContext(context, variable) {
     if (context && context.hasOwnProperty(variable.name)) {
       if (context.hasOwnProperty(`${variable.name}_1`)) {
@@ -18,6 +35,9 @@ class ContextMutator {
     }
   }
 
+  /**
+   * Add entity to context - Don't re-affect context, create new entity.name_1, entity.name_2...
+   */
   static addEntityToContext(context, entity) {
     if (context && context[entity.name]) {
       if (context[`${entity.name}_1`]) {

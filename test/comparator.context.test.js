@@ -4,9 +4,9 @@ const { expect } = chai;
 
 const { Comparator } = require('../src/utils/');
 
-const { InputExpressionTokenizer } = require('../src/streamTransformers/expression/');
+const { InputExpressionTokenizer } = require('../src/streamTransformers/');
 
-const { ComplexeTokenizer } = require('../src/streamTransformers/tokenizer/');
+const { ComplexeTokenizer } = require('../src/streamTransformers/');
 
 const tokenizerInput = new InputExpressionTokenizer();
 const tokenizerUtterance = ComplexeTokenizer;

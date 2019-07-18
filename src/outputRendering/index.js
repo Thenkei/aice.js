@@ -5,8 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const AICE = require('./aice/AICE');
+const { SimpleOutputRenderer } = require('./outputRenderer');
 
 module.exports = {
-  AICE,
+  SimpleOutputRenderer,
 };

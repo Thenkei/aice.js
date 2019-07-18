@@ -2,7 +2,7 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { SimpleTokenizer, ComplexeTokenizer } = require('../src/streamTransformers/tokenizer/');
+const { SimpleTokenizer, ComplexeTokenizer } = require('../src/streamTransformers/');
 
 describe('Simple Tokenizer', () => {
   it('Should tokenize "Hello"', () => {

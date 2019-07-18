@@ -4,9 +4,9 @@ const { expect } = chai;
 
 const { Comparator, LevenshteinComparator, DamerauLevenshteinComparator } = require('../src/utils/');
 
-const { InputExpressionTokenizer } = require('../src/streamTransformers/expression/');
+const { InputExpressionTokenizer } = require('../src/streamTransformers/');
 
-const { ComplexeTokenizer } = require('../src/streamTransformers/tokenizer/');
+const { ComplexeTokenizer } = require('../src/streamTransformers/');
 
 const tokenizerInput = new InputExpressionTokenizer();
 const tokenizerUtterance = ComplexeTokenizer;
@@ -63,7 +63,7 @@ describe('Simple Comparator', () => {
 });
 
 describe('Levenshtein Comparator', () => {
-  const levenshteinComparator = new Comparator(LevenshteinComparator);
+  const levenshteinComparator = new Comparator(new LevenshteinComparator());
   it('Should match Sentences with typing error', () => {
     const input = 'Hello';
     const utterance = 'Helli';
@@ -78,7 +78,7 @@ describe('Levenshtein Comparator', () => {
 
   it('Should match Complexe Sentences with typing error', () => {
     const input = '^my name is {{name=*}} shady ^';
-    const utterance = 'Hello, my nqme is slime shady !!!!!! REPU';
+    const utterance = 'Hello, my nqme is slime shady ! REPU';
 
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(utterance);
@@ -90,7 +90,7 @@ describe('Levenshtein Comparator', () => {
 
   it('Should match Complexe Sentences with typing error 2', () => {
     const input = '^my name is {{name=*}} shady ^';
-    const utterance = 'Hello, my nqme is slime shody !!!!!! REPU';
+    const utterance = 'Hello, my nqme is slime shody ! REPU';
 
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(utterance);
@@ -114,7 +114,7 @@ describe('Levenshtein Comparator', () => {
 });
 
 describe('Demerau-Levenshtein Comparator', () => {
-  const damerauComparator = new Comparator(DamerauLevenshteinComparator);
+  const damerauComparator = new Comparator(new DamerauLevenshteinComparator());
   it('Should match Sentences with typing error', () => {
     const input = 'Hello';
     const utterance = 'Helli';
@@ -141,14 +141,13 @@ describe('Demerau-Levenshtein Comparator', () => {
 
   it('Should match Complexe Sentences with typing error 2', () => {
     const input = '^my name is {{name=*}} shady ^';
-    const utterance = 'Hello, my nqme is slime shody !!!!!! REPU';
+    const utterance = 'Hello, my nqme is slim shody !!!!!! REPU';
 
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(utterance);
 
     const result = damerauComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
-    // expect(result.confidence).to.equal(0.9);
   });
 
   it("Shouldn't match Sentences with too many typing error", () => {
@@ -307,7 +306,7 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
 });
 
 describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
-  const levenshteinComparator = new Comparator(LevenshteinComparator);
+  const levenshteinComparator = new Comparator(new LevenshteinComparator());
   it('Compare "*" to "" should be false', () => {
     const input = '*';
     const utterance = '';

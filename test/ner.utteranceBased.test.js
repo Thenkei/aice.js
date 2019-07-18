@@ -2,9 +2,9 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { NERManager, EnumEntity, SystemEntities } = require('../src/streamTransformers/ner/utteranceBasedNer');
+const { NERManager, EnumEntity, SystemEntities } = require('../src/streamTransformers');
 
-const { EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity } = SystemEntities;
+const { EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRuleBasedEntity } = SystemEntities;
 
 const LANG = 'fr';
 
@@ -57,6 +57,35 @@ describe('EnumEntity', () => {
   });
 });
 
+describe('PhoneNumberRuleBasedEntity', () => {
+  it('Should find a single match for entity phone number with french phonenumber classic', () => {
+    const utterance = 'Mon tel est 0102030405';
+    const result = PhoneNumberRuleBasedEntity.extract(LANG, utterance);
+    expect(result[0]).to.deep.include({ match: '0102030405' });
+  });
+  it('Should find a multiple match for entity phonenumber with different format in french', () => {
+    const utterance = 'Mon tel perso est 0102030405, et mon pro +33102030405';
+    const result = PhoneNumberRuleBasedEntity.extract(LANG, utterance);
+    expect(result[0]).to.deep.include({ match: '0102030405' });
+    expect(result[1]).to.deep.include({ match: '+33102030405' });
+  });
+
+  it('Should find a multiple match for entity phonenumber with tricks  in french', () => {
+    const utterance =
+      'tel 1 : 0102030405 tel 2: +33102030405 tel 3: +23546523 tel 4: 1010101010 tel5: 5566778899 tel 6: 0504030201';
+    const result = PhoneNumberRuleBasedEntity.extract(LANG, utterance);
+    expect(result[0]).to.deep.include({ match: '0102030405' });
+    expect(result[1]).to.deep.include({ match: '+33102030405' });
+    expect(result[2]).to.deep.include({ match: '0504030201' });
+  });
+
+  it('Should find nothing if no phonenumber is in the utterance in french', () => {
+    const utterance = 'Je veux rien, laisse moi tranquille 01 02 03 04';
+    const result = PhoneNumberRuleBasedEntity.extract(LANG, utterance);
+    expect(result).to.deep.equal([]);
+  });
+});
+
 describe('EmojiEntity', () => {
   it('Should find a single match for entity emoji', () => {
     const utterance = "J'aimerais avoir un 😾";
@@ -99,12 +128,12 @@ describe('URLRegExpEntity', () => {
 
 describe('NERManager', () => {
   it('Should find a match for both email and url', () => {
-    const utterance = "C'est un test avec un mail jeff@example.fr et une url https://morgan.corp merci bien";
+    const utterance = "C'est un test avec un mail JeFf@eXamPle.fr et une url https://morgan.corp merci bien";
     const ner = new NERManager();
     ner.addNamedEntity(EmailRegExpEntity);
     ner.addNamedEntity(UrlRegExpEntity);
     const entities = ner.findEntitiesFromUtterance(LANG, utterance);
-    expect(entities[0]).to.deep.include({ match: 'jeff@example.fr' });
+    expect(entities[0]).to.deep.include({ match: 'JeFf@eXamPle.fr', resolution: 'jeff@example.fr' });
     expect(entities[1]).to.deep.include({ match: 'https://morgan.corp' });
   });
 
@@ -114,9 +143,7 @@ describe('NERManager', () => {
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance);
-    expect(results).to.equal(
-      "C'est un test avec un mail @{{system.regex.email}} et une url @{{system.regex.url}} merci bien",
-    );
+    expect(results).to.equal("C'est un test avec un mail @{{email}} et une url @{{url}} merci bien");
   });
 
   it('Should get normalized utterance for url and email', () => {
@@ -125,7 +152,7 @@ describe('NERManager', () => {
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance);
-    expect(results).to.equal("C'est un test avec un url @{{system.regex.url}} et un mail @{{system.regex.email}}");
+    expect(results).to.equal("C'est un test avec un url @{{url}} et un mail @{{email}}");
   });
 
   it('Should get normalized utterance for many entities', () => {
@@ -137,7 +164,7 @@ describe('NERManager', () => {
     ner.addNamedEntity(EmojiRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance);
     expect(results).to.equal(
-      "C'est un test @{{system.regex.emoji}} avec un mail @{{system.regex.email}} et une url @{{system.regex.url}} merci bien. Je crois que Jeff Boss est parti voici son numéro 0651382265. Appelle le rapidement. @{{system.regex.url}} est un superbe site ! Mon chat a 9 ans dans une semaine.",
+      "C'est un test @{{emoji}} avec un mail @{{email}} et une url @{{url}} merci bien. Je crois que Jeff Boss est parti voici son numéro 0651382265. Appelle le rapidement. @{{url}} est un superbe site ! Mon chat a 9 ans dans une semaine.",
     );
   });
 
@@ -154,8 +181,6 @@ describe('NERManager', () => {
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance, [EmailRegExpEntity]);
-    expect(results).to.equal(
-      "C'est un test avec un mail @{{system.regex.email}} et une url https://morgan.corp merci bien",
-    );
+    expect(results).to.equal("C'est un test avec un mail @{{email}} et une url https://morgan.corp merci bien");
   });
 });

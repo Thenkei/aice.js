@@ -7,36 +7,64 @@
 
 const Levenshtein = require('./levenshtein');
 const Damerau = require('./damerau');
-const ContextMutator = require('./contextMutator');
+const ContextMutator = require('../contextMutator');
 
-class ExactComparator {
-  static compare(a, b) {
-    const result = { match: a.toLowerCase() === b.toLowerCase(), score: 1.0 };
+class AbstractComparator {
+  constructor(name) {
+    this.name = name;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  compare() {
+    throw new Error('AbstractComparator - Cannot use compare function on abstract class');
+  }
+}
+
+class ExactComparator extends AbstractComparator {
+  constructor() {
+    super('exact-comparator');
+    this.score = 1.0;
+  }
+
+  compare(a, b) {
+    const result = { match: a.toLowerCase() === b.toLowerCase(), score: this.score };
     return result;
   }
 }
 
-class LevenshteinComparator {
-  static compare(a, b, threshold = 0.49) {
+class LevenshteinComparator extends AbstractComparator {
+  constructor(threshold = 0.49) {
+    super('levenshtein-comparator');
+    this.threshold = threshold;
+  }
+
+  compare(a, b) {
     const result = {};
 
     const levenshteinScore = Levenshtein(a.toLowerCase(), b.toLowerCase());
     result.score = levenshteinScore !== 0 ? (a.length - levenshteinScore) / a.length : 1.0;
 
-    result.match = result.score > threshold;
+    result.match = result.score > this.threshold;
     return result;
   }
 }
 
-class DamerauLevenshteinComparator {
-  static compare(a, b) {
+class DamerauLevenshteinComparator extends AbstractComparator {
+  constructor(
+    cutoffDamerauScoreFunc = a => (a.length > 5 ? Math.floor(a.length / 2) - 2 : Math.floor(a.length / 2) - 1),
+  ) {
+    super('damerau-levenshtein-comparator');
+    this.cutoffDamerauScoreFunc = cutoffDamerauScoreFunc;
+  }
+
+  compare(a, b) {
     const result = {};
 
     const damerauScore = Damerau.distance(a.toLowerCase(), b.toLowerCase());
     result.score = damerauScore !== 0 ? (a.length - damerauScore) / a.length : 1.0;
 
     // Possible rule based on score - using a cut off on DamerauScore
-    const cutoffDamerauScore = a.length > 5 ? Math.floor(a.length / 2) - 1 : Math.floor(a.length / 2);
+    const cutoffDamerauScore = this.cutoffDamerauScoreFunc(a);
     result.match = damerauScore <= cutoffDamerauScore;
     return result;
   }
@@ -46,8 +74,8 @@ class DamerauLevenshteinComparator {
  * @class Comparator
  */
 class Comparator {
-  constructor(internalComparator = ExactComparator) {
-    this.comparator = internalComparator.compare;
+  constructor(internalComparator = new ExactComparator()) {
+    this.comparator = internalComparator;
   }
 
   /**
@@ -123,10 +151,10 @@ class Comparator {
             break;
           }
           const { ner, text: textU } = result.iteratorU.value;
-          result.match = expression.entityType === ner.entityType;
+          result.match = expression.name === ner.name;
 
           if (result.match) {
-            const varName = expression.contextName || expression.entityType.toLowerCase();
+            const varName = expression.contextName || expression.name.toLowerCase();
             // TODO Will change after the NER TOKEN Implementation => ner.value ? ner.row ? ner.match ...
             ContextMutator.addVariableToContext(result.context, { name: varName, value: textU });
           }
@@ -139,7 +167,7 @@ class Comparator {
           break;
         }
         const { text: textU } = result.iteratorU.value;
-        const res = this.comparator(text.toLowerCase(), textU.toLowerCase());
+        const res = this.comparator.compare(text.toLowerCase(), textU.toLowerCase());
         result.match = res.match;
         // TODO handle comparison score // max user typing error // max % error by wordToken
         // result.confidence = res.score !== 1 ? 0.9

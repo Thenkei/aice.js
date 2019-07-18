@@ -5,8 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const AICE = require('./aice/AICE');
+const { Comparator, LevenshteinComparator, DamerauLevenshteinComparator } = require('./comparator');
 
 module.exports = {
-  AICE,
+  Comparator,
+  DamerauLevenshteinComparator,
+  LevenshteinComparator,
 };

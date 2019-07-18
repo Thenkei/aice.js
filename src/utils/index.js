@@ -5,16 +5,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { Comparator, LevenshteinComparator, DamerauLevenshteinComparator } = require('./comparator');
+const { Comparator, LevenshteinComparator, DamerauLevenshteinComparator } = require('./comparator/comparator');
 const ContextMutator = require('./contextMutator');
+const { ConditionEvaluator, ValueEvaluator } = require('./evaluator');
 const Utils = require('./utils');
 const parseAdaptOpenNLXSyntax = require('./openNLXSyntaxAdapter');
 
 module.exports = {
   Comparator,
   ContextMutator,
+  ConditionEvaluator,
   DamerauLevenshteinComparator,
   LevenshteinComparator,
   Utils,
+  ValueEvaluator,
   parseAdaptOpenNLXSyntax,
 };
