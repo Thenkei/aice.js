@@ -7,13 +7,14 @@
 
 class ValueEvaluator {
   static evaluateValue(value, context) {
+    if (typeof value !== 'object') {
+      return value;
+    }
+
     if (value.type === 'VARIABLE') {
       return ValueEvaluator.evaluateContext(value.value, context);
     }
 
-    if (value.type === 'TEXT') {
-      return value.value;
-    }
     throw new Error('VariableEvaluator.evaluateValue - Unknown value type');
   }
 

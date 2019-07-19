@@ -9,15 +9,15 @@ const ValueEvaluator = require('./valueEvaluator');
 
 class ConditionEvaluator {
   static evaluate(condition, context) {
-    if (condition.operande === 'LeftRightExpression') {
+    if (condition.type === 'LeftRightExpression') {
       return ConditionEvaluator.leftRightExpressionEvaluator(condition, context);
     }
 
-    if (condition.operande === 'UnaryExpression') {
+    if (condition.type === 'UnaryExpression') {
       return ConditionEvaluator.unaryExpressionEvaluator(condition, context);
     }
 
-    throw new Error('ConditionEvaluator.evaluateCondition - Unknown condition operande');
+    throw new Error('ConditionEvaluator.evaluate - Unknown condition type');
   }
 
   static leftRightExpressionEvaluator(condition, context) {
