@@ -50,9 +50,7 @@ class LevenshteinComparator extends AbstractComparator {
 }
 
 class DamerauLevenshteinComparator extends AbstractComparator {
-  constructor(
-    cutoffDamerauScoreFunc = a => (a.length > 5 ? Math.floor(a.length / 2) - 2 : Math.floor(a.length / 2) - 1),
-  ) {
+  constructor(cutoffDamerauScoreFunc = a => (a.length > 4 ? 2 : 1)) {
     super('damerau-levenshtein-comparator');
     this.cutoffDamerauScoreFunc = cutoffDamerauScoreFunc;
   }

@@ -164,7 +164,7 @@ describe('Demerau-Levenshtein Comparator', () => {
 
   it('Should match Sentences with pertutations', () => {
     const input = 'Hello my friend';
-    const utterance = 'ehlol ym nriend';
+    const utterance = 'ehllo ym nriend';
 
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(utterance);
@@ -176,7 +176,7 @@ describe('Demerau-Levenshtein Comparator', () => {
 
   it('Should match Sentences with pertutations', () => {
     const input = 'Hello my friend';
-    const utterance = 'ehlol ym nrined';
+    const utterance = 'ehllo my rfiend';
 
     const sentenceI = tokenizerInput.tokenize(input);
     const sentenceU = tokenizerUtterance.tokenize(utterance);
