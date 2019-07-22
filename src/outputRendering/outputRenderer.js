@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { ValueEvaluator, ConditionEvaluator, ContextMutator } = require('../utils/');
+const { ConditionEvaluator, Renderer } = require('../utils');
 
 class OutputRenderer {
   constructor({ name, settings, answers }) {
@@ -15,44 +15,6 @@ class OutputRenderer {
     this.settings = settings || {};
     this.name = name;
     this.answers = answers || [];
-  }
-
-  static render(tokenizedOutput, context) {
-    let outputMesssage = '';
-    for (const {
-      value: { text, expression },
-    } of tokenizedOutput) {
-      if (expression) {
-        // TYPE OUTPUT
-        if (expression.type === 'OUTPUT') {
-          if (expression.value) {
-            const variableEvaluated = ValueEvaluator.evaluateValue(expression.value, context);
-            ContextMutator.addToContext(context, {
-              name: expression.contextName,
-              value: variableEvaluated,
-            });
-
-            outputMesssage += variableEvaluated;
-          } else {
-            outputMesssage += ValueEvaluator.evaluateContext(expression.contextName, context);
-          }
-
-          // TYPE CODE
-        } else if (expression.type === 'CODE') {
-          ContextMutator.addToContext(context, {
-            name: expression.contextName,
-            value: ValueEvaluator.evaluateValue(expression.value, context),
-          });
-
-          // ERROR
-        } else {
-          throw new Error('Invalid OutputRendering Render - Unknown expression');
-        }
-      } else {
-        outputMesssage += text;
-      }
-    }
-    return outputMesssage;
   }
 
   train(answers) {
@@ -75,11 +37,12 @@ class SimpleOutputRenderer extends OutputRenderer {
     const filtredAnswers = this.answers.filter(a => a.lang === lang && a.intentid === intentid);
     const res = filtredAnswers.filter(ans => {
       // Call pre-WSs
-      // await ans.preWSs.forEach(ws => ws.call(context));
+      // const renderedParameter = ws.parameters.map(p => OutputRenderer.render(p, context);
+      // await ans.preWSs.forEach(ws => WebServiceHandler.handle(ws, renderedParameter, context);
 
       // Check Conditions
       const conditionChecked = ans.conditions.reduce(
-        (accumulator, condition) => accumulator && ConditionEvaluator.evaluateCondition(condition, context),
+        (accumulator, condition) => accumulator && ConditionEvaluator.evaluate(condition, context),
         true,
       );
 
@@ -95,7 +58,7 @@ class SimpleOutputRenderer extends OutputRenderer {
 
     if (res && res.length > 0) {
       const rand = Math.floor(Math.random() * Math.floor(res.length));
-      return { intentid, score, renderResponse: OutputRenderer.render(res[rand].tokenizedOutput, context) };
+      return { intentid, score, renderResponse: Renderer.render(res[rand].tokenizedOutput, context) };
     }
     return filtredAnswers[0]; // NOT SURE ABOUT THAT
   }

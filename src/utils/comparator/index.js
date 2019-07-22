@@ -5,10 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { Comparator, LevenshteinComparator, DamerauLevenshteinComparator } = require('./comparator');
+const { Comparator } = require('./comparator');
+const { StrategyComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy } = require('./strategies');
 
 module.exports = {
   Comparator,
-  DamerauLevenshteinComparator,
-  LevenshteinComparator,
+  StrategyComparator,
+  ExactStrategy,
+  LevenshteinStrategy,
+  DamerauLevenshteinStrategy,
 };

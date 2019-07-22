@@ -49,7 +49,7 @@ class EnumEntity extends NamedEntity {
             name: this.name,
             start: located,
             end: located + le.length,
-            resolution: typeof this.resolve === 'function' ? this.resolve(le) : le,
+            resolution: this.resolve(le),
           });
           extracted.push(entity);
         }

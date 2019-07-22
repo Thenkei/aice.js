@@ -28,7 +28,7 @@ class NERTokenizer {
 
   tokenize(stream, list = new DoubleLinkedList(), normalize = true) {
     const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
-    const appendToken = (acc, entity = undefined) => {
+    const appendToken = (acc, entity = {}) => {
       if (acc !== '') {
         list.append({ text: acc, ner: entity });
       }

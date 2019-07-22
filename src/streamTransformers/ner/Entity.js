@@ -11,8 +11,9 @@
  */
 
 class Entity {
-  constructor({ match, confidence, type, name, resolution, start, end }) {
+  constructor({ match, row, confidence, type, name, resolution, start, end }) {
     this.match = match;
+    this.row = row;
     this.confidence = confidence;
     this.type = type;
     this.name = name;

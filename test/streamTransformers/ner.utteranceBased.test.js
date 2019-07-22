@@ -2,9 +2,9 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { NERManager, EnumEntity, SystemEntities } = require('../src/streamTransformers');
+const { NERManager, EnumEntity, SystemEntities } = require('../../src/streamTransformers');
 
-const { EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRuleBasedEntity } = SystemEntities;
+const { EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRegExpEntity } = SystemEntities;
 
 const LANG = 'fr';
 
@@ -57,15 +57,15 @@ describe('EnumEntity', () => {
   });
 });
 
-describe('PhoneNumberRuleBasedEntity', () => {
+describe('PhoneNumberRegExpEntity', () => {
   it('Should find a single match for entity phone number with french phonenumber classic', () => {
     const utterance = 'Mon tel est 0102030405';
-    const result = PhoneNumberRuleBasedEntity.extract(LANG, utterance);
+    const result = PhoneNumberRegExpEntity.extract(LANG, utterance);
     expect(result[0]).to.deep.include({ match: '0102030405' });
   });
   it('Should find a multiple match for entity phonenumber with different format in french', () => {
     const utterance = 'Mon tel perso est 0102030405, et mon pro +33102030405';
-    const result = PhoneNumberRuleBasedEntity.extract(LANG, utterance);
+    const result = PhoneNumberRegExpEntity.extract(LANG, utterance);
     expect(result[0]).to.deep.include({ match: '0102030405' });
     expect(result[1]).to.deep.include({ match: '+33102030405' });
   });
@@ -73,7 +73,7 @@ describe('PhoneNumberRuleBasedEntity', () => {
   it('Should find a multiple match for entity phonenumber with tricks  in french', () => {
     const utterance =
       'tel 1 : 0102030405 tel 2: +33102030405 tel 3: +23546523 tel 4: 1010101010 tel5: 5566778899 tel 6: 0504030201';
-    const result = PhoneNumberRuleBasedEntity.extract(LANG, utterance);
+    const result = PhoneNumberRegExpEntity.extract(LANG, utterance);
     expect(result[0]).to.deep.include({ match: '0102030405' });
     expect(result[1]).to.deep.include({ match: '+33102030405' });
     expect(result[2]).to.deep.include({ match: '0504030201' });
@@ -81,7 +81,7 @@ describe('PhoneNumberRuleBasedEntity', () => {
 
   it('Should find nothing if no phonenumber is in the utterance in french', () => {
     const utterance = 'Je veux rien, laisse moi tranquille 01 02 03 04';
-    const result = PhoneNumberRuleBasedEntity.extract(LANG, utterance);
+    const result = PhoneNumberRegExpEntity.extract(LANG, utterance);
     expect(result).to.deep.equal([]);
   });
 });

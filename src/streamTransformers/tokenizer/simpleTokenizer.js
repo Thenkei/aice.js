@@ -14,7 +14,7 @@ class SimpleTokenizer {
     const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
     normalized.split(/[^a-z0-9äâàéèëêïîöôùüûœç]+/i).forEach(token => {
       if (token !== '') {
-        list.append({ text: token });
+        list.append({ text: token, ner: {} });
       }
     });
 

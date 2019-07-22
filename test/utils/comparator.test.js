@@ -2,17 +2,30 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { Comparator, LevenshteinComparator, DamerauLevenshteinComparator } = require('../src/utils/');
+const { StrategyComparator, Comparator, LevenshteinStrategy, DamerauLevenshteinStrategy } = require('../../src/utils');
 
-const { InputExpressionTokenizer } = require('../src/streamTransformers/');
+const { InputExpressionTokenizer } = require('../../src/streamTransformers');
 
-const { ComplexeTokenizer } = require('../src/streamTransformers/');
+const { ComplexeTokenizer } = require('../../src/streamTransformers');
 
 const tokenizerInput = new InputExpressionTokenizer();
 const tokenizerUtterance = ComplexeTokenizer;
 
 describe('Simple Comparator', () => {
   const simpleComparator = new Comparator();
+
+  it('Should not match different sentences', () => {
+    const input = 'My name is what';
+    const utterance = 'you are slim';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(false);
+    expect(result.confidence).to.equal(1.0);
+  });
+
   it('Should exact match same Sentences', () => {
     const input = 'Hello';
     const utterance = 'Hello';
@@ -63,7 +76,8 @@ describe('Simple Comparator', () => {
 });
 
 describe('Levenshtein Comparator', () => {
-  const levenshteinComparator = new Comparator(new LevenshteinComparator());
+  const levenshteinComparator = new Comparator(new LevenshteinStrategy());
+
   it('Should match Sentences with typing error', () => {
     const input = 'Hello';
     const utterance = 'Helli';
@@ -114,7 +128,7 @@ describe('Levenshtein Comparator', () => {
 });
 
 describe('Demerau-Levenshtein Comparator', () => {
-  const damerauComparator = new Comparator(new DamerauLevenshteinComparator());
+  const damerauComparator = new Comparator(new DamerauLevenshteinStrategy());
   it('Should match Sentences with typing error', () => {
     const input = 'Hello';
     const utterance = 'Helli';
@@ -124,7 +138,6 @@ describe('Demerau-Levenshtein Comparator', () => {
 
     const result = damerauComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
-    // expect(result.confidence).to.equal(0.9);
   });
 
   it('Should match Complexe Sentences with typing error', () => {
@@ -159,7 +172,6 @@ describe('Demerau-Levenshtein Comparator', () => {
 
     const result = damerauComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
-    // expect(result.confidence).to.equal(0.9);
   });
 
   it('Should match Sentences with pertutations', () => {
@@ -195,7 +207,6 @@ describe('Demerau-Levenshtein Comparator', () => {
 
     const result = damerauComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
-    // expect(result.confidence).to.equal(0.9);
   });
 });
 
@@ -306,7 +317,7 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
 });
 
 describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
-  const levenshteinComparator = new Comparator(new LevenshteinComparator());
+  const levenshteinComparator = new Comparator(new LevenshteinStrategy());
   it('Compare "*" to "" should be false', () => {
     const input = '*';
     const utterance = '';
@@ -382,5 +393,15 @@ describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
     expect(result.context.anyornothing).to.equal('Bob');
+  });
+});
+
+describe('Abtract class - StrategyComparator', () => {
+  const abstractComparator = new StrategyComparator('abstract');
+
+  it('Should throw an error if no compare definition', () => {
+    expect(() => abstractComparator.compare()).to.throw(
+      'StrategyComparator - Cannot use compare function on abstract class',
+    );
   });
 });

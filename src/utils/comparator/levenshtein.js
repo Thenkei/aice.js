@@ -8,7 +8,8 @@
  */
 
 module.exports = (a, b) => {
-  if (!a || !b) return (a || b).length;
+  if (!a) return 0;
+  if (!b) return a.length;
   const m = [];
   for (let i = 0; i <= b.length; i += 1) {
     m[i] = [i];

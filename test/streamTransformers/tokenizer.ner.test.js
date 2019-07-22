@@ -2,9 +2,9 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { NERTokenizer } = require('../src/streamTransformers/');
+const { NERTokenizer } = require('../../src/streamTransformers');
 
-const { NERManager, SystemEntities } = require('../src/streamTransformers/');
+const { NERManager, SystemEntities } = require('../../src/streamTransformers');
 
 const { EmailRegExpEntity, UrlRegExpEntity } = SystemEntities;
 
@@ -53,5 +53,11 @@ describe('NER Tokenizer', () => {
     expect(emailToken.value.ner.match).to.equal('opla@opla.ai');
     expect(emailToken.value.ner.type).to.equal('regex');
     expect(emailToken.value.ner.name).to.equal('email');
+  });
+
+  it('NERTokenizer - Should throw error required constructor parameters', () => {
+    expect(() => new NERTokenizer()).to.throw(
+      'Invalid NERTokenizer constructor - NamedEntityRecognizer & lang are required',
+    );
   });
 });

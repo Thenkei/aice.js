@@ -14,7 +14,7 @@ const parseValue = match => {
   const isText = match.includes("'") || match.includes('"');
   const value = match.trim();
 
-  return isText ? { type: 'TEXT', value: value.slice(1, -1) } : { type: 'VARIABLE', value };
+  return isText ? value.slice(1, -1) : { type: 'VARIABLE', value };
 };
 
 /**

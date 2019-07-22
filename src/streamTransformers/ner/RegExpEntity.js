@@ -46,7 +46,7 @@ class RegExpEntity extends NamedEntity {
         name: this.name,
         start: match.index,
         end: match.index + v.length,
-        resolution: typeof this.resolve === 'function' ? this.resolve(v) : v,
+        resolution: this.resolve(v),
       });
       extracted.push(entity);
     }

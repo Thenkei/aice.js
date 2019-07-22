@@ -7,7 +7,7 @@
 
 /* eslint-disable no-param-reassign */
 const { IntentResolverManager } = require('../intentsResolver');
-const { SimpleOutputRenderer } = require('../outputRendering');
+const { OutputRenderingManager } = require('../outputRendering');
 const { InputExpressionTokenizer, OutputExpressionTokenizer } = require('../streamTransformers/expression');
 const { NERTokenizer } = require('../streamTransformers/tokenizer');
 
@@ -28,7 +28,7 @@ class AICE {
     this.OutputExpressionTokenizer = new OutputExpressionTokenizer();
 
     this.IntentResolverManager = new IntentResolverManager(this.settings);
-    this.OutputRenderingManager = new SimpleOutputRenderer(this.settings);
+    this.OutputRenderingManager = new OutputRenderingManager(this.settings);
 
     SystemEntities.getSystemEntities().forEach(e => {
       this.NERManager.addNamedEntity(e);
@@ -39,15 +39,25 @@ class AICE {
     this.NERManager.addNamedEntity(namedEntity);
   }
 
-  addIntent(lang, intentid, topic, previous, inputs, outputs, outputType) {
-    // TODO tokenize inputs & outputs
-    // Change intentResolvers & outputRenderers (intent based)
-    // Handle botId
-    const document = { lang, intentid, topic, previous, inputs, outputs, outputType };
-    if (!this.inputs.includes(document)) {
-      this.intents.push(document);
-    }
+  loadFromJSON(bot) {
+    bot.intents.forEach(i => this.addIntent(i));
   }
+
+  addIntent({ name, topic, previous, inputs, outputs, outputType }, lang = 'fr') {
+    console.log(topic, previous, outputType, name);
+    inputs.forEach(i => this.addInput(lang, i.inputMessage, name));
+    outputs.forEach(o => this.addAnswer(lang, name, o.outputMessage, [], o.conditions, o.WSs));
+  }
+
+  // addIntent(lang, intentid, topic, previous, inputs, outputs, outputType) {
+  //   // TODO tokenize inputs & outputs
+  //   // Change intentResolvers & outputRenderers (intent based)
+  //   // Handle botId
+  //   const document = { lang, intentid, topic, previous, inputs, outputs, outputType };
+  //   if (!this.inputs.includes(document)) {
+  //     this.intents.push(document);
+  //   }
+  // }
 
   addInput(lang, input, intentid) {
     const tokenizedInput = this.InputExpressionTokenizer.tokenize(input);
@@ -93,6 +103,7 @@ class AICE {
       answer: (answer || {}).renderResponse,
       score: answer ? answer.score : 0,
       intent: (answer || {}).intentid,
+      context,
     };
   }
 }

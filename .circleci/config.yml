@@ -1,0 +1,34 @@
+version: 2.1
+
+executors:
+  aice-executor:
+    docker:
+      - image: circleci/node:lts
+    working_directory: ~/aice
+
+jobs:
+  test-and-lint:
+    executor: aice-executor
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore Yarn Package Cache
+          keys:
+            - yarn-packages-{{ checksum \"yarn.lock\" }}
+      - run:
+          name: Install Dependencies
+          command: yarn install --frozen-lockfile
+      - save_cache:
+          name: Save Yarn Package Cache
+          key: yarn-packages-{{ checksum \"yarn.lock\" }}
+          paths:
+            - ~/.cache/yarn
+      - run: yarn lint
+      - run: yarn coverage
+      - store_artifacts:
+          path: ~/aice/cov
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - test-and-lint

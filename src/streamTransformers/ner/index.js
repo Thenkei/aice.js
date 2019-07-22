@@ -10,7 +10,6 @@ const EnumEntity = require('./EnumEntity');
 const NamedEntity = require('./NamedEntity');
 const NERManager = require('./NERManager');
 const RegExpEntity = require('./RegExpEntity');
-const { PhoneNumberEntity } = require('./ruleBasedEntities/RuleBasedEntity');
 const SystemEntities = require('./SystemEntities');
 
 module.exports = {
@@ -18,7 +17,6 @@ module.exports = {
   EnumEntity,
   NamedEntity,
   NERManager,
-  PhoneNumberEntity,
   RegExpEntity,
   SystemEntities,
 };

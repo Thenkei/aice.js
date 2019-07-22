@@ -9,7 +9,7 @@
 
 // ----- Inline Syntax Adapter (Callable)
 const callableRegex = new RegExp(/{{(.+?)\((.+?)\)}}|<<(.+?)\((.+?)\)>>/, 'g');
-const paramsRegex = new RegExp(/ *`(.+?)` *,| *(.+?) *,| *(.+) */, 'g');
+const paramsRegex = new RegExp(/ ?`(.+?)` ?,?| ?(.+?) *,| *(.+)/, 'g');
 const variableRegex = new RegExp(/{\$(.+?)}| *\$(\w+) */, 'g');
 
 const parseAdaptInlineSyntax = text => {
@@ -67,6 +67,13 @@ const parseAdaptInlineSyntax = text => {
   return { callables, newInlineText };
 };
 
+const parseValue = match => {
+  const isText = match.includes("'") || match.includes('"');
+  const value = match.trim();
+
+  return isText ? value.slice(1, -1) : { type: 'VARIABLE', value };
+};
+
 // ----- Outputs Adapter
 const parseAdaptOutputsSyntax = oldOutputs => {
   const outputs = [];
@@ -84,7 +91,12 @@ const parseAdaptOutputsSyntax = oldOutputs => {
       // Conditions
       oldOutput.children.forEach(conditionOutput => {
         const output = { conditions: [], WSs: [] };
-        const condition = { operande: 'eq', Lvalue: `{{${conditionOutput.name}}}`, Rvalue: conditionOutput.value };
+        const condition = {
+          type: 'LeftRightExpression',
+          operande: 'eq',
+          Lvalue: parseValue(conditionOutput.name),
+          Rvalue: conditionOutput.value,
+        };
 
         const parsed = parseAdaptInlineSyntax(conditionOutput.text);
         output.outputMessage = parsed.newInlineText;
@@ -113,9 +125,9 @@ const parseAdaptInputsSyntax = oldInputs => {
 const parseAdaptIntentSyntax = oldIntents => {
   const intents = [];
   oldIntents.forEach(oldIntent => {
-    const { id, name, topic, previous, input, output, order } = oldIntent;
+    const { id, name, topic = '*', previous = [], input, output } = oldIntent;
 
-    const intent = { id, name, topic, previous, order, outputType: 'multiple' };
+    const intent = { id, name, topic, previous, outputType: 'multiple' };
     intent.inputs = parseAdaptInputsSyntax(input);
     intent.outputs = parseAdaptOutputsSyntax(output);
 
@@ -135,4 +147,14 @@ const parseAdaptOpenNLXSyntax = oldBotDocument => {
   return document;
 };
 
-module.exports = parseAdaptOpenNLXSyntax;
+const parseAdaptOpenNLXSyntaxV3 = oldBotDocument => {
+  const { name } = oldBotDocument;
+  const intents = parseAdaptIntentSyntax(oldBotDocument.intents);
+  const { entities, variables } = oldBotDocument; // Might need transformation ? See later
+
+  const document = { name, timestamp: new Date(), intents, entities, variables };
+
+  return document;
+};
+
+module.exports = { parseAdaptOpenNLXSyntax, parseAdaptOpenNLXSyntaxV3 };

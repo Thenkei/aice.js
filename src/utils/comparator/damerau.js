@@ -40,10 +40,6 @@
 
 /* eslint-disable no-param-reassign */
 function initMatrix(s1, s2) {
-  if (undefined === s1 || undefined === s2) {
-    return null;
-  }
-
   const d = [];
   for (let i = 0; i <= s1.length; i += 1) {
     d[i] = [];
@@ -68,9 +64,6 @@ function distance(s1, s2) {
   }
 
   const d = initMatrix(s1, s2);
-  if (d === null) {
-    return -1;
-  }
   for (let i = 1; i <= s1.length; i += 1) {
     let cost;
     for (let j = 1; j <= s2.length; j += 1) {
@@ -103,7 +96,7 @@ function distanceProm(s1, s2) {
 function minDistanceProm(s1, list) {
   return new Promise((resolve, reject) => {
     if (undefined === list || !Array.isArray(list)) {
-      reject(new Error('A problem occurred because of a null or undefined parameter'));
+      reject(new Error('Damerau - A problem occurred because second parameter need to be an array'));
     } else if (list.length === 0) {
       resolve(distance(s1, ''));
     }

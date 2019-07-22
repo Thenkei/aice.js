@@ -2,7 +2,7 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { DoubleLinkedList } = require('../src/streamTransformers/');
+const { DoubleLinkedList } = require('../../src/streamTransformers');
 
 describe('DoubleLinkedList', () => {
   it('Get(-1) from empty DoubleLinkedList', () => {
@@ -74,6 +74,9 @@ describe('DoubleLinkedList Iterator', () => {
     ['var1', 'var2', 'var3'].forEach(e => list.append(e));
     let i = 1;
     for (const it of list) {
+      if (i > 1) expect(it.hasPrevious()).to.equal(true);
+      if (i < 3) expect(it.hasNext()).to.equal(true);
+
       expect(it.value).to.equal(`var${i}`);
       i += 1;
     }

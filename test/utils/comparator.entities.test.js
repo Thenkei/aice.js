@@ -2,13 +2,13 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { Comparator } = require('../src/utils/');
+const { Comparator } = require('../../src/utils');
 
-const { InputExpressionTokenizer } = require('../src/streamTransformers/');
+const { InputExpressionTokenizer } = require('../../src/streamTransformers');
 
-const { NERManager, SystemEntities } = require('../src/streamTransformers/');
+const { NERManager, SystemEntities } = require('../../src/streamTransformers');
 
-const { NERTokenizer } = require('../src/streamTransformers/');
+const { NERTokenizer } = require('../../src/streamTransformers');
 
 const LANG = 'fr';
 
@@ -31,5 +31,6 @@ describe('Entities Comparator', () => {
 
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
+    expect(result.context.email).to.equal(utterance);
   });
 });

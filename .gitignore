@@ -65,3 +65,6 @@ typings/
 .vscode/
 
 .DS_Store
+
+# Coverage html report dir
+cov

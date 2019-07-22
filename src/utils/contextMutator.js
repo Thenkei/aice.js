@@ -9,9 +9,9 @@
 /* eslint-disable no-param-reassign */
 class ContextMutator {
   /**
-   * Add variable to context - re-affect context !
+   * Set variable to context - re-affect context !
    */
-  static addToContext(context, variable) {
+  static setToContext(context, variable) {
     context[variable.name] = variable.value;
   }
 
@@ -22,8 +22,10 @@ class ContextMutator {
     if (context && context.hasOwnProperty(variable.name)) {
       if (context.hasOwnProperty(`${variable.name}_1`)) {
         const [, index] = Object.keys(context)
-          .map(k => (k.indexOf('_') ? k : null))
-          .filter(v => v)
+          .reduce((acc, k) => {
+            if (k.indexOf('_')) acc.push(k);
+            return acc;
+          }, [])
           .reverse()[0]
           .split('_');
         context[`${variable.name}_${Number(index) + 1}`] = variable.value;
@@ -42,8 +44,10 @@ class ContextMutator {
     if (context && context[entity.name]) {
       if (context[`${entity.name}_1`]) {
         const [, index] = Object.keys(context)
-          .map(k => (k.indexOf('_') ? k : null))
-          .filter(v => v)
+          .reduce((acc, k) => {
+            if (k.indexOf('_')) acc.push(k);
+            return acc;
+          }, [])
           .reverse()[0]
           .split('_');
         context[`${entity.name}_${Number(index) + 1}`] = entity.row || entity.match;

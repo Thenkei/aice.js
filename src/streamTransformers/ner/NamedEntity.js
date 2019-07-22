@@ -6,7 +6,7 @@
  */
 
 class NamedEntity {
-  constructor({ name, type, scope, resolve = () => {} }) {
+  constructor({ name, type, scope, resolve = v => v }) {
     if (!name) {
       throw new Error('Invalid Entity constructor - name are required');
     }

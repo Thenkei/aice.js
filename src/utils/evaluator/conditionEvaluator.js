@@ -29,7 +29,7 @@ class ConditionEvaluator {
     }
 
     if (condition.Rvalue.operande) {
-      Rvalue = ConditionEvaluator.evaluate(condition.Lvalue, context);
+      Rvalue = ConditionEvaluator.evaluate(condition.Rvalue, context);
     }
 
     if (!Lvalue) {
@@ -68,11 +68,11 @@ class ConditionEvaluator {
     let LRvalue = null;
     let result;
     if (condition.LRvalue.operande) {
-      LRvalue = ConditionEvaluator.evaluate(condition.Lvalue, context);
+      LRvalue = ConditionEvaluator.evaluate(condition.LRvalue, context);
     }
 
     if (!LRvalue) {
-      LRvalue = ValueEvaluator.evaluateValue(condition.Lvalue, context);
+      LRvalue = ValueEvaluator.evaluateValue(condition.LRvalue, context);
     }
 
     switch (condition.operande) {

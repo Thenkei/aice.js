@@ -5,19 +5,34 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { Comparator, LevenshteinComparator, DamerauLevenshteinComparator } = require('./comparator/comparator');
-const ContextMutator = require('./contextMutator');
-const { ConditionEvaluator, ValueEvaluator } = require('./evaluator');
+const {
+  Comparator,
+  StrategyComparator,
+  ExactStrategy,
+  LevenshteinStrategy,
+  DamerauLevenshteinStrategy,
+} = require('./comparator');
+
 const Utils = require('./utils');
-const parseAdaptOpenNLXSyntax = require('./openNLXSyntaxAdapter');
+
+const ContextMutator = require('./contextMutator');
+
+const { ConditionEvaluator, ValueEvaluator } = require('./evaluator');
+
+const Renderer = require('./rendering/renderer');
+
+const openNLXSyntaxAdapter = require('./openNLXSyntaxAdapter');
 
 module.exports = {
   Comparator,
   ContextMutator,
   ConditionEvaluator,
-  DamerauLevenshteinComparator,
-  LevenshteinComparator,
+  StrategyComparator,
+  ExactStrategy,
+  LevenshteinStrategy,
+  DamerauLevenshteinStrategy,
+  Renderer,
   Utils,
   ValueEvaluator,
-  parseAdaptOpenNLXSyntax,
+  openNLXSyntaxAdapter,
 };

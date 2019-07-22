@@ -22,9 +22,10 @@ const ctxt = {};
   nlp.addAnswer('fr', 'agent.fallback', "J'essaie' de m'améliorer mais la je bloque...", 'fr');
   nlp.addAnswer('fr', 'agent.fallback', 'Je ne comprends pas vraiment pas.', 'fr');
 
-  nlp.addInput('fr', 'Bonjour', 'agent.presentation');
-  nlp.addInput('fr', 'Coucou', 'agent.presentation');
-  nlp.addInput('fr', 'Salut', 'agent.presentation');
+  nlp.addInput('fr', 'Bonjour^', 'agent.presentation');
+  nlp.addInput('fr', 'Coucou^', 'agent.presentation');
+  nlp.addInput('fr', 'Salut^', 'agent.presentation');
+  nlp.addInput('fr', 'Hello^', 'agent.presentation');
 
   nlp.addAnswer('fr', 'agent.presentation', 'Coucou :)', 'fr');
 
@@ -35,6 +36,7 @@ const ctxt = {};
 
   nlp.addInput('fr', '^bye^', 'agent.bye');
   nlp.addInput('fr', '^a la prochaine^', 'agent.bye');
+  nlp.addInput('fr', '^a plus^', 'agent.bye');
   nlp.addInput('fr', '^bonne journée^', 'agent.bye');
 
   nlp.addAnswer('fr', 'agent.bye', 'A la prochaine!', 'fr');

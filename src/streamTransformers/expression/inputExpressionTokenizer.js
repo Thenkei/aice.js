@@ -47,7 +47,7 @@ class InputExpressionTokenizer {
         parser: () => ({ type: 'ANYORNOTHING' }),
       },
       {
-        regex: /@(.+)/,
+        regex: /@([\w_]+)/,
         parser: match => ({ type: 'ENTITY', name: match }),
       },
     ]);

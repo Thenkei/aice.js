@@ -7,11 +7,13 @@
 
 class Sentence {
   constructor(stream = '') {
+    this.raw = '';
     this.write(stream);
   }
 
   write(stream) {
     this.raw += stream;
+    // this.linkedListNER += NERTokenizer.tokenize(stream, this.linkedListNER);
     // this.normalized += Normalizer.normalize(stream);
     // this.linkedListWords = ComplexeTokenizer.tokenize(stream, this.linkedListWords);
     // this.linkedListIDK = ComplexeTokenizer.tokenize(stream, this.linkedListIDK);

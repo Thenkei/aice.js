@@ -6,7 +6,6 @@
  */
 
 const RegExpEntity = require('./RegExpEntity');
-const { PhoneNumberEntity } = require('./ruleBasedEntities');
 
 const SYSTEM_SCOPE = 'system';
 
@@ -29,15 +28,20 @@ const EmojiRegExpEntity = new RegExpEntity({
   name: 'emoji',
   regex: /(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])/gi,
 });
+// TODO Add lang to Entity
+const PhoneNumberRegExpEntity = new RegExpEntity({
+  id: '@phonenumber',
+  scope: SYSTEM_SCOPE,
+  name: 'phonenumber',
+  regex: /(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})/gi,
+});
 
-const PhoneNumberRuleBasedEntity = new PhoneNumberEntity();
-
-const getSystemEntities = () => [EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRuleBasedEntity];
+const getSystemEntities = () => [EmailRegExpEntity, UrlRegExpEntity, EmojiRegExpEntity, PhoneNumberRegExpEntity];
 
 module.exports = {
   EmailRegExpEntity,
   UrlRegExpEntity,
   EmojiRegExpEntity,
-  PhoneNumberRuleBasedEntity,
+  PhoneNumberRegExpEntity,
   getSystemEntities,
 };
