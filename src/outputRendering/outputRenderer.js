@@ -10,7 +10,7 @@ const { ConditionEvaluator, Renderer } = require('../utils');
 class OutputRenderer {
   constructor({ name, settings, answers }) {
     if (!name) {
-      throw new Error('Invalid OutputRendering constructor - Missing name');
+      throw new Error('Invalid OutputRenderer constructor - Missing name');
     }
     this.settings = settings || {};
     this.name = name;
@@ -23,7 +23,7 @@ class OutputRenderer {
 
   // eslint-disable-next-line class-methods-use-this
   process() {
-    throw new Error('Invalid OutputRendering - process() should be implemented in child class');
+    throw new Error('Invalid OutputRenderer - process() should be implemented in child class');
   }
 }
 
@@ -32,7 +32,7 @@ class SimpleOutputRenderer extends OutputRenderer {
     super({ settings, answers, name: 'simple-output-rendering' });
   }
 
-  process(lang, intents = [], context) {
+  process(lang, intents, context) {
     const { intentid, score } = intents[0] || {}; // Best match for now
     const filtredAnswers = this.answers.filter(a => a.lang === lang && a.intentid === intentid);
     const res = filtredAnswers.filter(ans => {

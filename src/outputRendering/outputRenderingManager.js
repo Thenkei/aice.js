@@ -10,11 +10,11 @@ const { SimpleOutputRenderer } = require('./outputRenderer');
 class OutputRenderingManager {
   constructor({ settings }) {
     this.settings = settings || {};
-    this.outputsRenderer = [];
-    if (this.settings.outputsRenderer && this.settings.outputsRenderer.length > 1) {
-      this.outputsRenderer = this.settings.outputsRenderer;
+    this.outputRenderers = [];
+    if (this.settings.outputRenderers && this.settings.outputRenderers.length > 0) {
+      this.outputRenderers = this.settings.outputRenderers;
     } else {
-      this.outputsRenderer = [new SimpleOutputRenderer({ settings: this.settings })];
+      this.outputRenderers = [new SimpleOutputRenderer({ settings: this.settings })];
     }
   }
 
@@ -23,13 +23,13 @@ class OutputRenderingManager {
    * @returns {Intents}
    */
   train(outputs) {
-    this.outputsRenderer[0].train(outputs);
-    // this.outputsRenderer.forEach(or => or.train(outputs));
+    this.outputRenderers[0].train(outputs);
+    // this.outputRenderers.forEach(or => or.train(outputs));
   }
 
   process(lang, intents = [], context) {
     // Will need some more mechanics before using multiple OutputRenderer techniques
-    return this.outputsRenderer[0].process(lang, intents, context);
+    return this.outputRenderers[0].process(lang, intents, context);
   }
 }
 

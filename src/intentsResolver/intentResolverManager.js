@@ -12,7 +12,7 @@ class IntentResolverManager {
   constructor({ settings }) {
     this.settings = settings || {};
     this.intentResolvers = [];
-    if (this.settings.intentResolvers && this.settings.intentResolvers.length > 1) {
+    if (this.settings.intentResolvers && this.settings.intentResolvers.length > 0) {
       this.intentResolvers = this.settings.intentResolvers;
     } else {
       this.intentResolvers = [new SimpleIntentResolver({ settings: this.settings })];

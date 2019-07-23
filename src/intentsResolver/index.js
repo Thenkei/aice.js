@@ -7,8 +7,10 @@
 
 const SimpleIntentResolver = require('./simpleIntentResolver');
 const IntentResolverManager = require('./intentResolverManager');
+const IntentResolver = require('./intentResolver');
 
 module.exports = {
   IntentResolverManager,
+  IntentResolver,
   SimpleIntentResolver,
 };
