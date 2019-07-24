@@ -1,11 +1,16 @@
 {
-  "name": "aice-nlp",
+  "name": "aice.js",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
   "description": "Artificial Intelligence Conversational Engine",
   "author": "Morgan Perre <morgan.perre@gmail.com>",
   "private": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn test"
+    }
+  },
   "scripts": {
     "test": "$(yarn bin)/mocha --recursive",
     "lint": "$(yarn bin)/eslint src",
@@ -20,6 +25,7 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "2.18.0",
     "eslint-plugin-prettier": "^3.1.0",
+    "husky": "^3.0.1",
     "mocha": "^6.1.4",
     "nodemon": "^1.19.0",
     "nyc": "^14.1.1",
