@@ -23,6 +23,10 @@ class Renderer {
           } else {
             renderable = renderable && ValueEvaluator.evaluateContext(expression.contextName, context) !== undefined;
           }
+        } else if (expression.type === 'CODE') {
+          renderable = renderable && ValueEvaluator.evaluateValue(expression.value, context) !== undefined;
+        } else {
+          throw new Error('Invalid OutputRendering isRenderable - Unknown expression');
         }
       }
     }

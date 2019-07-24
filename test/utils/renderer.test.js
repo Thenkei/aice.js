@@ -59,7 +59,6 @@ describe('Renderer - render', () => {
 describe('Renderer - isRenderable', () => {
   it('Should return true for basic text', () => {
     const output = 'I need to be rendered';
-
     const tokenizeO = tokenizerOutput.tokenize(output);
 
     const result = Renderer.isRenderable(tokenizeO, {});
@@ -68,7 +67,6 @@ describe('Renderer - isRenderable', () => {
 
   it('Should not be renderable, variable not in context', () => {
     const output = 'I need to render a variable {{variable}}';
-
     const tokenizeO = tokenizerOutput.tokenize(output);
 
     const result = Renderer.isRenderable(tokenizeO, {});
@@ -77,7 +75,6 @@ describe('Renderer - isRenderable', () => {
 
   it('Should be renderable, variable in context', () => {
     const output = 'I need to render a variable {{variable}}';
-
     const tokenizeO = tokenizerOutput.tokenize(output);
 
     const result = Renderer.isRenderable(tokenizeO, { variable: 'something' });
@@ -86,10 +83,36 @@ describe('Renderer - isRenderable', () => {
 
   it('Should be renderable, variable setted during rendering', () => {
     const output = 'I need to render a variable {{variable="test"}}';
-
     const tokenizeO = tokenizerOutput.tokenize(output);
 
     const result = Renderer.isRenderable(tokenizeO, {});
     expect(result).to.equal(true);
+  });
+
+  it('Should be renderable, variable setted during rendering', () => {
+    const output = 'I need to render a variable {{variable="test"}}';
+    const tokenizeO = tokenizerOutput.tokenize(output);
+
+    const result = Renderer.isRenderable(tokenizeO, {});
+    expect(result).to.equal(true);
+  });
+
+  it('Should be renderable, variable setted during rendering', () => {
+    const output = 'I need to render a variable <<variable="test">>';
+    const tokenizeO = tokenizerOutput.tokenize(output);
+
+    const result = Renderer.isRenderable(tokenizeO, {});
+    expect(result).to.equal(true);
+  });
+
+  it('Should throw error unknown', () => {
+    const output = 'I need to render a variable';
+    const tokenizeO = tokenizerOutput.tokenize(output);
+    // Add unknown expression
+    tokenizeO.append({ expression: {} });
+
+    expect(() => Renderer.isRenderable(tokenizeO, {})).to.throw(
+      'Invalid OutputRendering isRenderable - Unknown expression',
+    );
   });
 });
