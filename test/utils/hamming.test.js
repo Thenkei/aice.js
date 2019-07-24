@@ -12,6 +12,11 @@ describe('Hamming distance', () => {
   });
 
   it('Hamming distance - just one parameter', () => {
+    const distance = hammingDistance(baseString);
+    expect(distance).to.equal(28);
+  });
+
+  it('Hamming distance - basic case', () => {
     const distance = hammingDistance(baseString, 'moredisestablishmentarianism');
     expect(distance).to.equal(4);
   });

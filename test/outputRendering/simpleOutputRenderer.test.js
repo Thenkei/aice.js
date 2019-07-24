@@ -33,6 +33,27 @@ describe('SimpleOutputRenderer', () => {
     expect(result.renderResponse).to.equal('Ceci est une reponse');
   });
 
+  it('Should process answers - lang filtering but no response', () => {
+    const renderer = new SimpleOutputRenderer({
+      outputs: [
+        {
+          intentid: 1,
+          answers: [
+            {
+              lang: 'fr',
+              tokenizedOutput: tokenizerOutput.tokenize('Ceci est une reponse'),
+              conditions: [{ type: 'UnaryExpression', operande: 'not', LRvalue: true }],
+            },
+            { lang: 'en', tokenizedOutput: tokenizerOutput.tokenize('This is not the good answer'), conditions: [] },
+          ],
+        },
+      ],
+    });
+
+    const result = renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    expect(result).to.equal(undefined);
+  });
+
   const goodAnwser = 'This is the good answer';
   const alsoMultiAnwser = 'This is also a good answer in multiple';
 
