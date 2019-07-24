@@ -13,14 +13,14 @@ describe('OutputRenderer', () => {
     const renderer = new OutputRenderer({ name: 'test-renderer' });
     renderer.train();
 
-    expect(renderer.answers).to.eql([]);
+    expect(renderer.outputs).to.eql([]);
   });
 
   it('Should train model', () => {
     const renderer = new OutputRenderer({ name: 'test-renderer' });
     renderer.train([1]);
 
-    expect(renderer.answers).to.eql([1]);
+    expect(renderer.outputs).to.eql([1]);
   });
 
   it('Should throw error, process need to be override in sub-class', () => {

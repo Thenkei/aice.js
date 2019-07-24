@@ -9,7 +9,7 @@ describe('OutputRenderingManager', () => {
     const outputRenderingManager = new OutputRenderingManager({});
     outputRenderingManager.train([1]);
 
-    expect(outputRenderingManager.outputRenderers[0].answers.length).to.equal(1);
+    expect(outputRenderingManager.outputRenderers[0].outputs.length).to.equal(1);
   });
 
   it('Should custom intentResolvers using settings', () => {

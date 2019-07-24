@@ -15,7 +15,7 @@ const bot = {
   intents: [
     {
       name: 'hello',
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: 'Hello',
@@ -30,28 +30,10 @@ const bot = {
           inputMessage: 'Coucou',
         },
         {
-          inputMessage: 'Helo',
-        },
-        {
-          inputMessage: 'salt',
-        },
-        {
-          inputMessage: 'salut',
-        },
-        {
-          inputMessage: 'sl',
-        },
-        {
           inputMessage: 'slt',
         },
         {
           inputMessage: 'bjr',
-        },
-        {
-          inputMessage: 'brj',
-        },
-        {
-          inputMessage: 'cc',
         },
       ],
       outputs: [
@@ -63,13 +45,13 @@ const bot = {
         {
           conditions: [],
           WSs: [],
-          outputMessage: 'Et bienvenue chez OplaZap ! En quoi puis-je vous aider ?',
+          outputMessage: 'Et bienvenue chez OplaZap ! En quoi puis-je vous aider ? <<action="nopizza">>',
         },
       ],
     },
     {
       name: "what'sup",
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: 'Comment vas-tu',
@@ -99,7 +81,7 @@ const bot = {
     },
     {
       name: 'forcecustomerintent',
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: 'Je ne sais pas',
@@ -121,7 +103,7 @@ const bot = {
     },
     {
       name: 'orderpizzachoiceplus',
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: '^{{pizza=@pizzatype}} {{size=@pizzasize}}^',
@@ -140,7 +122,7 @@ const bot = {
     },
     {
       name: 'intentorderpizza',
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: "J'aimerai commander une pizza.",
@@ -155,16 +137,7 @@ const bot = {
           inputMessage: 'pizza pizza pizza',
         },
         {
-          inputMessage: 'une pizza',
-        },
-        {
-          inputMessage: 'pizza',
-        },
-        {
-          inputMessage: 'je veux une pizza',
-        },
-        {
-          inputMessage: 'piz',
+          inputMessage: '^ pizza ^',
         },
       ],
       outputs: [
@@ -180,7 +153,7 @@ const bot = {
       outputType: 'multiple',
       inputs: [
         {
-          inputMessage: '@email',
+          inputMessage: '^ @email ^',
         },
       ],
       outputs: [
@@ -217,7 +190,7 @@ const bot = {
     },
     {
       name: 'whyyoufeltbad',
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: 'Je me sens mal.',
@@ -260,7 +233,7 @@ const bot = {
     },
     {
       name: 'orderpizzasummary',
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: 'Alors cette commande ?',
@@ -282,7 +255,7 @@ const bot = {
     },
     {
       name: 'orderpizzachoice',
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: '^{{pizza=@pizzatype}}^',
@@ -298,7 +271,7 @@ const bot = {
     },
     {
       name: 'orderpizzawaydelivery',
-      outputType: 'multiple',
+      outputType: 'random',
       inputs: [
         {
           inputMessage: '^ @way ^',

@@ -20,7 +20,7 @@ class AICE {
   constructor(settings) {
     this.settings = settings || {};
     this.inputs = [];
-    this.answers = [];
+    this.outputs = [];
     // StreamsTransformers
     this.NERManager = new NERManager();
     this.NERTokenizer = new NERTokenizer(LANG, this.NERManager);
@@ -43,10 +43,26 @@ class AICE {
     bot.intents.forEach(i => this.addIntent(i));
   }
 
+  // eslint-disable-next-line no-unused-vars
   addIntent({ name, topic, previous, inputs, outputs, outputType }, lang = 'fr') {
-    console.log(topic, previous, outputType, name);
+    // IntentsInputs
     inputs.forEach(i => this.addInput(lang, i.inputMessage, name));
-    outputs.forEach(o => this.addAnswer(lang, name, o.outputMessage, [], o.conditions, o.WSs));
+
+    // IntentsOutputs
+    const answers = outputs.map(o => {
+      const tokenizedOutput = this.OutputExpressionTokenizer.tokenize(o.outputMessage);
+      const answer = {
+        lang,
+        tokenizedOutput,
+        preWSs: [],
+        conditions: o.conditions,
+        WSs: o.WSs,
+      };
+
+      return answer;
+    });
+
+    this.outputs.push({ intentid: name, outputType, answers });
   }
 
   // addIntent(lang, intentid, topic, previous, inputs, outputs, outputType) {
@@ -72,19 +88,22 @@ class AICE {
     const answer = {
       lang,
       tokenizedOutput,
-      intentid,
       preWSs,
       conditions,
       WSs,
     };
-    if (!this.answers.includes(answer)) {
-      this.answers.push(answer);
+
+    const intentOutput = this.outputs.find(o => o.intentid === intentid);
+    if (!intentOutput) {
+      this.outputs.push({ intentid, outputType: 'random', answers: [answer] });
+    } else if (!intentOutput.answers.includes(answer)) {
+      intentOutput.answers.push(answer);
     }
   }
 
   train() {
     this.IntentResolverManager.train(this.inputs);
-    this.OutputRenderingManager.train(this.answers);
+    this.OutputRenderingManager.train(this.outputs);
   }
 
   process(utterance, context) {

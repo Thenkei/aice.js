@@ -17,14 +17,19 @@ describe('SimpleOutputRenderer', () => {
 
   it('Should process answers', () => {
     const renderer = new SimpleOutputRenderer({
-      answers: [
-        { lang: 'fr', intentid: 1, tokenizedOutput: tokenizerOutput.tokenize('This is an answer'), conditions: [] },
-        { lang: 'en', intentid: 1, tokenizedOutput: tokenizerOutput.tokenize('Not the good answer'), conditions: [] },
+      outputs: [
+        {
+          intentid: 1,
+          answers: [
+            { lang: 'fr', tokenizedOutput: tokenizerOutput.tokenize('Ceci est une reponse'), conditions: [] },
+            { lang: 'en', tokenizedOutput: tokenizerOutput.tokenize('This is not the good answer'), conditions: [] },
+          ],
+        },
       ],
     });
 
     const result = renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
     expect(result.score).to.equal(0.99);
-    expect(result.renderResponse).to.equal('This is an answer');
+    expect(result.renderResponse).to.equal('Ceci est une reponse');
   });
 });

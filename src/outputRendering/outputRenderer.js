@@ -8,17 +8,17 @@
 const { ConditionEvaluator, Renderer } = require('../utils');
 
 class OutputRenderer {
-  constructor({ name, settings, answers }) {
+  constructor({ name, settings, outputs }) {
     if (!name) {
       throw new Error('Invalid OutputRenderer constructor - Missing name');
     }
     this.settings = settings || {};
     this.name = name;
-    this.answers = answers || [];
+    this.outputs = outputs || [];
   }
 
-  train(answers) {
-    this.answers = answers || [];
+  train(outputs) {
+    this.outputs = outputs || [];
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -28,13 +28,21 @@ class OutputRenderer {
 }
 
 class SimpleOutputRenderer extends OutputRenderer {
-  constructor({ settings, answers }) {
-    super({ settings, answers, name: 'simple-output-rendering' });
+  constructor({ settings, outputs }) {
+    super({ settings, outputs, name: 'simple-output-rendering' });
   }
 
   process(lang, intents, context) {
     const { intentid, score } = intents[0] || {}; // Best match for now
-    const filtredAnswers = this.answers.filter(a => a.lang === lang && a.intentid === intentid);
+
+    // Retrieve output object for this intentid
+    const output = this.outputs.find(o => o.intentid === intentid);
+    if (!output) {
+      return undefined;
+    }
+
+    // Retrieve all answers for this lang
+    const filtredAnswers = output.answers.filter(a => a.lang === lang);
     const res = filtredAnswers.filter(ans => {
       // Call pre-WSs
       // const renderedParameter = ws.parameters.map(p => OutputRenderer.render(p, context);
@@ -57,10 +65,27 @@ class SimpleOutputRenderer extends OutputRenderer {
     });
 
     if (res && res.length > 0) {
-      const rand = Math.floor(Math.random() * Math.floor(res.length));
-      return { intentid, score, renderResponse: Renderer.render(res[rand].tokenizedOutput, context) };
+      let renderResponse;
+      switch (output.outputType) {
+        case 'single':
+          renderResponse = Renderer.render(res[0].tokenizedOutput, context);
+          break;
+
+        case 'multiple':
+          renderResponse = res.reduce((acc, r) => acc + Renderer.render(r.tokenizedOutput, context), '');
+          break;
+
+        default:
+        case 'random':
+          renderResponse = Renderer.render(
+            res[Math.floor(Math.random() * Math.floor(res.length))].tokenizedOutput,
+            context,
+          );
+          break;
+      }
+      return { intentid, score, renderResponse };
     }
-    return filtredAnswers[0]; // NOT SURE ABOUT THAT
+    return undefined;
   }
 }
 
