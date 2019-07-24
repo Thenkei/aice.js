@@ -6,9 +6,8 @@ const { Renderer } = require('../../src/utils');
 
 const { OutputExpressionTokenizer } = require('../../src/streamTransformers');
 
-describe('Renderer', () => {
-  const tokenizerOutput = new OutputExpressionTokenizer();
-
+const tokenizerOutput = new OutputExpressionTokenizer();
+describe('Renderer - render', () => {
   it('Should render basic text', () => {
     const output = 'I need to be rendered';
 
@@ -54,5 +53,43 @@ describe('Renderer', () => {
     tokenizeO.append({ expression: {} });
 
     expect(() => Renderer.render(tokenizeO, {})).to.throw('Invalid OutputRendering Render - Unknown expression');
+  });
+});
+
+describe('Renderer - isRenderable', () => {
+  it('Should return true for basic text', () => {
+    const output = 'I need to be rendered';
+
+    const tokenizeO = tokenizerOutput.tokenize(output);
+
+    const result = Renderer.isRenderable(tokenizeO, {});
+    expect(result).to.equal(true);
+  });
+
+  it('Should not be renderable, variable not in context', () => {
+    const output = 'I need to render a variable {{variable}}';
+
+    const tokenizeO = tokenizerOutput.tokenize(output);
+
+    const result = Renderer.isRenderable(tokenizeO, {});
+    expect(result).to.equal(false);
+  });
+
+  it('Should be renderable, variable in context', () => {
+    const output = 'I need to render a variable {{variable}}';
+
+    const tokenizeO = tokenizerOutput.tokenize(output);
+
+    const result = Renderer.isRenderable(tokenizeO, { variable: 'something' });
+    expect(result).to.equal(true);
+  });
+
+  it('Should be renderable, variable setted during rendering', () => {
+    const output = 'I need to render a variable {{variable="test"}}';
+
+    const tokenizeO = tokenizerOutput.tokenize(output);
+
+    const result = Renderer.isRenderable(tokenizeO, {});
+    expect(result).to.equal(true);
   });
 });

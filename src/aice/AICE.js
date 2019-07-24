@@ -44,7 +44,7 @@ class AICE {
   }
 
   // eslint-disable-next-line no-unused-vars
-  addIntent({ name, topic, previous, inputs, outputs, outputType }, lang = 'fr') {
+  addIntent({ name, inputs, outputs, outputType, topic = '*', previous }, lang = 'fr') {
     // IntentsInputs
     inputs.forEach(i => this.addInput(lang, i.inputMessage, name));
 

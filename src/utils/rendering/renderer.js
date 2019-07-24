@@ -10,6 +10,25 @@ const ValueEvaluator = require('../evaluator/valueEvaluator');
 const ContextMutator = require('../contextMutator');
 
 class Renderer {
+  static isRenderable(tokenizedOutput, context) {
+    let renderable = true;
+    for (const {
+      value: { expression },
+    } of tokenizedOutput) {
+      if (expression) {
+        // TYPE OUTPUT
+        if (expression.type === 'OUTPUT') {
+          if (expression.value) {
+            renderable = renderable && ValueEvaluator.evaluateValue(expression.value, context) !== undefined;
+          } else {
+            renderable = renderable && ValueEvaluator.evaluateContext(expression.contextName, context) !== undefined;
+          }
+        }
+      }
+    }
+    return renderable;
+  }
+
   static render(tokenizedOutput, context) {
     let outputMesssage = '';
     for (const {

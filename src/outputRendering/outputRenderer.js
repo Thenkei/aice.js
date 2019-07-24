@@ -61,7 +61,8 @@ class SimpleOutputRenderer extends OutputRenderer {
       // Call WSs
       // await ans.WSs.forEach(ws => ws.call(context));
 
-      return true;
+      // Final Check Context Evaluation
+      return Renderer.isRenderable(ans.tokenizedOutput, context);
     });
 
     if (res && res.length > 0) {
@@ -75,8 +76,8 @@ class SimpleOutputRenderer extends OutputRenderer {
           renderResponse = res.reduce((acc, r) => acc + Renderer.render(r.tokenizedOutput, context), '');
           break;
 
-        default:
         case 'random':
+        default:
           renderResponse = Renderer.render(
             res[Math.floor(Math.random() * Math.floor(res.length))].tokenizedOutput,
             context,
