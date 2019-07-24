@@ -4,7 +4,22 @@ executors:
   aice-executor:
     docker:
       - image: circleci/node:lts
-    working_directory: ~/aice
+    working_directory: ~/aicejs
+
+whitelist: &whitelist
+  paths:
+    - .npmignore
+    - dist/*
+    - node_modules/*
+    - src/*
+    - test/*
+    - CODE_OF_CONDUCT.md
+    - LICENSE
+    - package.json
+    - README.md
+    - .babelrc
+    - .eslintrc.json
+    - yarn.lock
 
 jobs:
   test-and-lint:
@@ -26,9 +41,32 @@ jobs:
       - run: yarn lint
       - run: yarn coverage
       - store_artifacts:
-          path: ~/aice/cov
+          path: ~/aicejs/cov
+      - persist_to_workspace:
+          root: ~/aicejs
+          <<: *whitelist
+
+  deploy:
+    executor: aice-executor
+    steps:
+      - attach_workspace:
+          at: ~/aicejs
+      - run: 
+          name: Write NPM Token to ~/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+      - run:
+          name: Publish
+          command: npm publish
 workflows:
   version: 2.1
   build:
     jobs:
       - test-and-lint
+      - deploy:
+          requires:
+            - test-and-lint
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              only: master
