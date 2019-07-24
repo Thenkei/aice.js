@@ -68,3 +68,5 @@ typings/
 
 # Coverage html report dir
 cov
+
+.vscode
