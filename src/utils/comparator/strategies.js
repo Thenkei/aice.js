@@ -53,7 +53,7 @@ class DamerauLevenshteinStrategy extends StrategyComparator {
     const damerauScore = Damerau.distance(a.toLowerCase(), b.toLowerCase());
     result.score = damerauScore !== 0 ? (a.length - damerauScore) / a.length : 1.0;
 
-    // Possible rule based on score - using a cut off on DamerauScore
+    // Based on score - using a cut off on DamerauScore
     const cutoffDamerauScore = this.cutoffDamerauScoreFunc(a);
     result.match = damerauScore <= cutoffDamerauScore;
     return result;

@@ -8,13 +8,13 @@
 const charMap = require('./charMap');
 
 /* eslint-disable no-bitwise */
-export const charNormalizer = (str, toLowerCase = false) => {
-  let c = str.charCodeAt(0);
+export const charNormalizer = (char, toLowerCase = false) => {
+  let c = char.charCodeAt(0);
   let s = '';
   if (c > 126) {
-    s = charMap[str] || '';
+    s = charMap[char] || '';
     if (toLowerCase) {
-      c = str.charCodeAt(0);
+      c = char.charCodeAt(0);
     }
   } else if (
     (c > 47 && c < 57) ||
@@ -23,7 +23,7 @@ export const charNormalizer = (str, toLowerCase = false) => {
     c === 42 ||
     c === 94
   ) {
-    s = str;
+    s = char;
   }
   if (toLowerCase && (c > 64 && c < 91)) {
     s = String.fromCharCode(c + (97 - 65)); // To lower case
@@ -33,16 +33,16 @@ export const charNormalizer = (str, toLowerCase = false) => {
 
 export const fastNormalizer = word => {
   let w = '';
-  for (const str of word) {
-    w += charNormalizer(str, true);
+  for (const char of word) {
+    w += charNormalizer(char, true);
   }
   return w;
 };
 
 export const hashCode = word => {
   let h = 0;
-  for (const str of word) {
-    h = (Math.imul(31, h) + str.charCodeAt(0)) | 0;
+  for (const char of word) {
+    h = (Math.imul(31, h) + char.charCodeAt(0)) | 0;
   }
   h >>>= 0;
   return h;

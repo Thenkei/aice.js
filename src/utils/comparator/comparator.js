@@ -106,9 +106,9 @@ class Comparator {
         }
         const { text: textU } = result.iteratorU.value;
         const res = this.comparator.compare(text.toLowerCase(), textU.toLowerCase());
+        // TODO handle comparison score we may lower
+        // result.confidence = ((result.size - 1) / result.size) * result.confidence + (1 / result.size) * res.score;
         result.match = res.match;
-        // TODO handle comparison score // max user typing error // max % error by wordToken
-        // result.confidence = res.score !== 1 ? 0.9
       }
     }
     return result;

@@ -6,9 +6,9 @@
  */
 
 module.exports = (a, b) => {
-  if (!a || !b) {
-    return 0;
-  }
+  if (!a) return 0;
+  if (!b) return a.length;
+
   if (a.length > b.length) {
     throw new Error('Hamming - Length of strings a must be smaller or equal to b');
   }
