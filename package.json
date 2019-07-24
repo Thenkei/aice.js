@@ -1,11 +1,11 @@
 {
   "name": "aice.js",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "0.0.0",
+  "main": "src/index.js",
   "license": "MIT",
   "description": "Artificial Intelligence Conversational Engine",
   "author": "Morgan Perre <morgan.perre@gmail.com>",
-  "private": true,
+  "private": false,
   "husky": {
     "hooks": {
       "pre-commit": "yarn test"
