@@ -98,4 +98,10 @@ describe('AICE NLP', () => {
     expect(aice.inputs.length).to.equal(0);
     expect(aice.outputs.length).to.equal(0);
   });
+
+  it('AICE - API normalizeInputEntities', () => {
+    const aice = new AICE();
+    const normalizedEntities = aice.normalizeInputEntities('fr', 'My informations are: example@mail.com 0625475309');
+    expect(normalizedEntities).to.equal('My informations are: @email @phonenumber');
+  });
 });

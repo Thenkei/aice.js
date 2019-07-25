@@ -39,6 +39,10 @@ class AICE {
     return this.NERManager.entities;
   }
 
+  normalizeInputEntities(lang, inputText) {
+    return this.NERManager.normalizeEntityUtterance(lang, inputText);
+  }
+
   addEntity(namedEntity) {
     this.NERManager.addNamedEntity(namedEntity);
   }

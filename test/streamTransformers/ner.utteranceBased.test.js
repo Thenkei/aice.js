@@ -143,7 +143,7 @@ describe('NERManager', () => {
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance);
-    expect(results).to.equal("C'est un test avec un mail @{{email}} et une url @{{url}} merci bien");
+    expect(results).to.equal("C'est un test avec un mail @email et une url @url merci bien");
   });
 
   it('Should get normalized utterance for url and email', () => {
@@ -152,7 +152,7 @@ describe('NERManager', () => {
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance);
-    expect(results).to.equal("C'est un test avec un url @{{url}} et un mail @{{email}}");
+    expect(results).to.equal("C'est un test avec un url @url et un mail @email");
   });
 
   it('Should get normalized utterance for many entities', () => {
@@ -164,7 +164,7 @@ describe('NERManager', () => {
     ner.addNamedEntity(EmojiRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance);
     expect(results).to.equal(
-      "C'est un test @{{emoji}} avec un mail @{{email}} et une url @{{url}} merci bien. Je crois que Jeff Boss est parti voici son numéro 0651382265. Appelle le rapidement. @{{url}} est un superbe site ! Mon chat a 9 ans dans une semaine.",
+      "C'est un test @emoji avec un mail @email et une url @url merci bien. Je crois que Jeff Boss est parti voici son numéro 0651382265. Appelle le rapidement. @url est un superbe site ! Mon chat a 9 ans dans une semaine.",
     );
   });
 
@@ -181,6 +181,6 @@ describe('NERManager', () => {
     ner.addNamedEntity(UrlRegExpEntity);
     ner.addNamedEntity(EmailRegExpEntity);
     const results = ner.normalizeEntityUtterance(LANG, utterance, [EmailRegExpEntity]);
-    expect(results).to.equal("C'est un test avec un mail @{{email}} et une url https://morgan.corp merci bien");
+    expect(results).to.equal("C'est un test avec un mail @email et une url https://morgan.corp merci bien");
   });
 });

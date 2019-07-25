@@ -54,7 +54,7 @@ class NERManager {
       const beginning = utterance.slice(index, entity.start);
       index = e.end;
       result += beginning;
-      result += `@{{${e.name}}}`;
+      result += `@${e.name}`;
     });
 
     result += utterance.slice(index);
