@@ -21,6 +21,18 @@ class DoubleLinkedListNode {
   hasPrevious() {
     return !!this.prev;
   }
+
+  mergeWithNext(value) {
+    if (!this.hasNext()) throw new Error('DoubleLinkedListNode - mergeWithNext : node got no next');
+    this.value = value;
+    this.next = this.next.next;
+  }
+
+  mergeWithPrevious(value) {
+    if (!this.hasPrevious()) throw new Error('DoubleLinkedListNode - mergeWithPrevious : node got no previous');
+    this.prev = this.prev.prev;
+    this.value = value;
+  }
 }
 
 const head = Symbol('head');

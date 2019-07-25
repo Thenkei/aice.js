@@ -113,3 +113,55 @@ describe('DoubleLinkedList Iterator', () => {
     // TODO ... stream tests gestion
   });
 });
+
+describe('DoubleLinkedList Merge', () => {
+  it('DoubleLinkedListNode - mergeWithNext should throw error', () => {
+    const list = new DoubleLinkedList();
+    list.append('red');
+
+    const it = list.lists();
+    const first = it.next().value;
+    expect(() => first.mergeWithNext('data')).to.throw('DoubleLinkedListNode - mergeWithNext : node got no next');
+  });
+
+  it('DoubleLinkedListNode - mergeWithNext', () => {
+    const list = new DoubleLinkedList();
+    list.append('red');
+    list.append('orange');
+    list.append('green');
+
+    const it = list.lists();
+    const first = it.next().value;
+    first.mergeWithNext('red with some orange');
+    expect(first.value).to.equal('red with some orange');
+
+    const last = it.next().value;
+    expect(last.value).to.equal('green');
+  });
+
+  it('DoubleLinkedListNode - mergeWithPrevious should throw error', () => {
+    const list = new DoubleLinkedList();
+    list.append('red');
+
+    const it = list.lists();
+    const first = it.next().value;
+    expect(() => first.mergeWithPrevious('data')).to.throw(
+      'DoubleLinkedListNode - mergeWithPrevious : node got no previous',
+    );
+  });
+
+  it('DoubleLinkedListNode - mergeWithPrevious', () => {
+    const list = new DoubleLinkedList();
+    list.append('red');
+    list.append('orange');
+    list.append('green');
+
+    const it = list.lists();
+    it.next();
+    const first = it.next().value;
+    first.mergeWithPrevious('orange with some red');
+    expect(first.value).to.equal('orange with some red');
+    const last = it.next().value;
+    expect(last.value).to.equal('green');
+  });
+});
