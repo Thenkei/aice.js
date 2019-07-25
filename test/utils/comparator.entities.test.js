@@ -33,4 +33,16 @@ describe('Entities Comparator', () => {
     expect(result.match).to.equal(true);
     expect(result.context.email).to.equal(utterance);
   });
+
+  it("Compare '^@email^' to 'john@doe.com' should be true", () => {
+    const input = '^@email^';
+    const utterance = 'john@doe.com';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.context.email).to.equal(utterance);
+  });
 });
