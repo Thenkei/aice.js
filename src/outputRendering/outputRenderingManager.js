@@ -29,6 +29,9 @@ class OutputRenderingManager {
 
   process(lang, intents = [], context) {
     // Will need some more mechanics before using multiple OutputRenderer techniques
+    // If context.internal_slotfilling use SlotFillingRenderer
+    // else use SimpleRenderer
+    // Last If previous renderers returns undefined use MLBasedRenderer
     return this.outputRenderers[0].process(lang, intents, context);
   }
 }

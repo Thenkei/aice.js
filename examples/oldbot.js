@@ -3,7 +3,7 @@
 const readline = require('readline');
 
 const threshold = 0.5;
-const { AICE } = require('../src/');
+const Loader = require('../src/aice/loader');
 
 const BOT_NAME = 'jarvich';
 const isSilent = process.argv[2] === '--silent';
@@ -331,11 +331,10 @@ const TakeAwayEnumEntity = new EnumEntity({
   const say = console.log;
   say('[training] start');
   let start = +Date.now();
-  const nlp = new AICE();
+  const nlp = Loader.fromJSON(bot);
   nlp.addEntity(SizeEnumEntity);
   nlp.addEntity(TypeEnumEntity);
   nlp.addEntity(TakeAwayEnumEntity);
-  nlp.loadFromJSON(bot);
 
   nlp.train();
   let end = +Date.now();

@@ -7,7 +7,7 @@
 
 const IntentResolver = require('./intentResolver');
 
-const { Comparator, DamerauLevenshteinStrategy } = require('../utils/');
+const { Comparator, DamerauLevenshteinStrategy } = require('../utils');
 
 class SimpleIntentResolver extends IntentResolver {
   constructor({ settings }, comparator = new Comparator(new DamerauLevenshteinStrategy())) {

@@ -39,43 +39,10 @@ class AICE {
     this.NERManager.addNamedEntity(namedEntity);
   }
 
-  loadFromJSON(bot) {
-    bot.intents.forEach(i => this.addIntent(i));
-  }
-
-  // eslint-disable-next-line no-unused-vars
-  addIntent({ name, inputs, outputs, outputType, topic = '*', previous }, lang = 'fr') {
-    // IntentsInputs
-    inputs.forEach(i => this.addInput(lang, i.inputMessage, name));
-
-    // IntentsOutputs
-    const answers = outputs.map(o => {
-      const tokenizedOutput = this.OutputExpressionTokenizer.tokenize(o.outputMessage);
-      const answer = {
-        lang,
-        tokenizedOutput,
-        preWSs: [],
-        conditions: o.conditions,
-        WSs: o.WSs,
-      };
-
-      return answer;
-    });
-
-    this.outputs.push({ intentid: name, outputType, answers });
-  }
-
-  // addIntent(lang, intentid, topic, previous, inputs, outputs, outputType) {
-  //   // TODO tokenize inputs & outputs
-  //   // Change intentResolvers & outputRenderers (intent based)
-  //   // Handle botId
-  //   const document = { lang, intentid, topic, previous, inputs, outputs, outputType };
-  //   if (!this.inputs.includes(document)) {
-  //     this.intents.push(document);
-  //   }
-  // }
-
   addInput(lang, input, intentid) {
+    if (!lang || !input || !intentid) {
+      throw new Error('AICE addInput - Has some missing mandatory parameters');
+    }
     const tokenizedInput = this.InputExpressionTokenizer.tokenize(input);
     const document = { lang, input, tokenizedInput, intentid };
     if (!this.inputs.includes(document)) {
@@ -83,7 +50,10 @@ class AICE {
     }
   }
 
-  addAnswer(lang, intentid, output, preWSs = [], conditions = [], WSs = []) {
+  addOutput(lang, intentid, output, preWSs = [], conditions = [], WSs = []) {
+    if (!lang || !output || !intentid) {
+      throw new Error('AICE addOutput - Has some missing mandatory parameters');
+    }
     const tokenizedOutput = this.OutputExpressionTokenizer.tokenize(output);
     const answer = {
       lang,
@@ -99,6 +69,11 @@ class AICE {
     } else if (!intentOutput.answers.includes(answer)) {
       intentOutput.answers.push(answer);
     }
+  }
+
+  clear() {
+    this.inputs = [];
+    this.outputs = [];
   }
 
   train() {

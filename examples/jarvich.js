@@ -17,29 +17,29 @@ const ctxt = {};
   // Fallback
   nlp.addInput('fr', '*', 'agent.fallback');
 
-  nlp.addAnswer('fr', 'agent.fallback', 'Je ne comprends pas.', 'fr');
-  nlp.addAnswer('fr', 'agent.fallback', 'Je ne sais pas quoi vous répondre.', 'fr');
-  nlp.addAnswer('fr', 'agent.fallback', "J'essaie' de m'améliorer mais la je bloque...", 'fr');
-  nlp.addAnswer('fr', 'agent.fallback', 'Je ne comprends pas vraiment pas.', 'fr');
+  nlp.addOutput('fr', 'agent.fallback', 'Je ne comprends pas.', 'fr');
+  nlp.addOutput('fr', 'agent.fallback', 'Je ne sais pas quoi vous répondre.', 'fr');
+  nlp.addOutput('fr', 'agent.fallback', "J'essaie' de m'améliorer mais la je bloque...", 'fr');
+  nlp.addOutput('fr', 'agent.fallback', 'Je ne comprends pas vraiment pas.', 'fr');
 
   nlp.addInput('fr', 'Bonjour^', 'agent.presentation');
   nlp.addInput('fr', 'Coucou^', 'agent.presentation');
   nlp.addInput('fr', 'Salut^', 'agent.presentation');
   nlp.addInput('fr', 'Hello^', 'agent.presentation');
 
-  nlp.addAnswer('fr', 'agent.presentation', 'Coucou :)', 'fr');
+  nlp.addOutput('fr', 'agent.presentation', 'Coucou :)', 'fr');
 
   nlp.addInput('fr', '^je suis {{name=*}}', 'agent.askname');
   nlp.addInput('fr', "^je m'appelle {{name=*}}", 'agent.askname');
 
-  nlp.addAnswer('fr', 'agent.askname', 'Hello {{name}}', 'fr');
+  nlp.addOutput('fr', 'agent.askname', 'Hello {{name}}', 'fr');
 
   nlp.addInput('fr', '^bye^', 'agent.bye');
   nlp.addInput('fr', '^a la prochaine^', 'agent.bye');
   nlp.addInput('fr', '^a plus^', 'agent.bye');
   nlp.addInput('fr', '^bonne journée^', 'agent.bye');
 
-  nlp.addAnswer('fr', 'agent.bye', 'A la prochaine!', 'fr');
+  nlp.addOutput('fr', 'agent.bye', 'A la prochaine!', 'fr');
 
   nlp.train();
   let end = +Date.now();
