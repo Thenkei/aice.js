@@ -49,7 +49,8 @@ class AICE {
     }
     const tokenizedInput = this.InputExpressionTokenizer.tokenize(input);
     const document = { lang, input, tokenizedInput, intentid };
-    if (!this.inputs.includes(document)) {
+
+    if (this.inputs.filter(i => i.lang === lang && i.input === input && i.intentid === intentid).length === 0) {
       this.inputs.push(document);
     }
   }
@@ -61,6 +62,7 @@ class AICE {
     const tokenizedOutput = this.OutputExpressionTokenizer.tokenize(output);
     const answer = {
       lang,
+      output,
       tokenizedOutput,
       preWSs,
       conditions,
@@ -70,7 +72,7 @@ class AICE {
     const intentOutput = this.outputs.find(o => o.intentid === intentid);
     if (!intentOutput) {
       this.outputs.push({ intentid, outputType: 'random', answers: [answer] });
-    } else if (!intentOutput.answers.includes(answer)) {
+    } else if (intentOutput.answers.filter(a => a.lang === lang && a.output === output).length === 0) {
       intentOutput.answers.push(answer);
     }
   }
