@@ -44,7 +44,8 @@ class AICE {
   }
 
   addEntity(namedEntity) {
-    this.NERManager.addNamedEntity(namedEntity);
+    if (this.NERManager.entities.filter(e => e.name === namedEntity.name).length === 0)
+      this.NERManager.addNamedEntity(namedEntity);
   }
 
   addInput(lang, input, intentid) {

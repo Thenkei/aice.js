@@ -63,6 +63,13 @@ describe('AICE NLP', () => {
     expect(aice.getAllEntities().length).to.equal(SystemEntities.getSystemEntities().length + 1);
   });
 
+  it('AICE - API addEntity same entity name twice', () => {
+    const aice = new AICE();
+    aice.addEntity(new RegExpEntity({ name: 'test', regex: /test/gi }));
+    aice.addEntity(new RegExpEntity({ name: 'test', regex: /test/gi }));
+    expect(aice.getAllEntities().length).to.equal(SystemEntities.getSystemEntities().length + 1);
+  });
+
   it('AICE - API addInput', () => {
     const aice = new AICE();
     aice.addInput('en', 'Hey', 'agent.presentation');
