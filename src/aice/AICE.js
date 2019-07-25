@@ -35,6 +35,10 @@ class AICE {
     });
   }
 
+  getAllEntities() {
+    return this.NERManager.entities;
+  }
+
   addEntity(namedEntity) {
     this.NERManager.addNamedEntity(namedEntity);
   }
