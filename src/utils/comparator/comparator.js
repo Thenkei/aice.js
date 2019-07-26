@@ -69,7 +69,7 @@ class Comparator {
    * @param {result} result result is a complexe object used to process Sentences comparison
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
    */
-  compareExpressions(resultState) {
+  compareExpressions(resultState, affectation = true) {
     let result = resultState;
     const { expression, text } = result.iteratorI.value;
 
@@ -96,7 +96,7 @@ class Comparator {
           if (result.match) {
             // TODO Will change after the NER TOKEN Implementation => ner.value ? ner.row ? ner.match ...
             const varName = expression.contextName || expression.name.toLowerCase();
-            ContextMutator.addVariableToContext(result.context, { name: varName, value: textU });
+            if (affectation) ContextMutator.addVariableToContext(result.context, { name: varName, value: textU });
           }
         }
         break;
@@ -140,7 +140,7 @@ class Comparator {
         result.iteratorU = result.iteratorGeneratorU.next();
       }
       // Iterate until same expression or end of sentence
-      while (!result.iteratorU.done && !this.compareExpressions(result).match) {
+      while (!result.iteratorU.done && !this.compareExpressions(result, false).match) {
         const { text: textU } = result.iteratorU.value;
         text += (!text && textU) || ` ${textU}`;
         result.iteratorU = result.iteratorGeneratorU.next();

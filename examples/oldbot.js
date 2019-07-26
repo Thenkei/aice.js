@@ -35,6 +35,9 @@ const bot = {
         {
           inputMessage: 'bjr',
         },
+        {
+          inputMessage: 'hola',
+        },
       ],
       outputs: [
         {

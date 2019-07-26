@@ -60,10 +60,10 @@ describe('ContextMutator', () => {
   });
 
   it('Context mutation indexOf error', () => {
-    const context = { _email: 'test@opla.ai' };
-    const entity = { name: '_email', match: 'opla@opla.ai' };
+    const context = { email: 'test@opla.ai' };
+    const entity = { name: 'email', match: 'opla@opla.ai' };
     ContextMutator.addEntityToContext(context, entity);
-    expect(context._email).to.equal('test@opla.ai');
-    expect(context._email_1).to.equal('opla@opla.ai');
+    expect(context.email).to.equal('test@opla.ai');
+    expect(context.email_1).to.equal('opla@opla.ai');
   });
 });

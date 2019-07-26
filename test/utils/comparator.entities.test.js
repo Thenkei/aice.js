@@ -53,6 +53,7 @@ describe('Entities Comparator', () => {
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.context.email).to.equal(utterance);
+    expect(Object.entries(result.context).length).to.equal(3); // anyornothing email anyornothing_1
   });
 
   it("Compare '^@email' to 'hello' should be false", () => {
