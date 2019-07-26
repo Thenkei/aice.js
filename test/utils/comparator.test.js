@@ -73,6 +73,17 @@ describe('Simple Comparator', () => {
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
   });
+
+  it("Compare 'That a text' to 'that a' should be false", () => {
+    const input = 'That a text';
+    const utterance = 'that a';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(false);
+  });
 });
 
 describe('Levenshtein Comparator', () => {

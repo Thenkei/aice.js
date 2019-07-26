@@ -45,4 +45,26 @@ describe('Entities Comparator', () => {
     expect(result.match).to.equal(true);
     expect(result.context.email).to.equal(utterance);
   });
+
+  it("Compare '^@email' to 'hello' should be false", () => {
+    const input = '^@email';
+    const utterance = 'hello';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(false);
+  });
+
+  it("Compare '^@email' to 'hello' should be false", () => {
+    const input = '^@email @phonenumber';
+    const utterance = 'test@opla.ai';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(false);
+  });
 });

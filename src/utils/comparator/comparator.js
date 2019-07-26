@@ -144,10 +144,8 @@ class Comparator {
         result.iteratorU = result.iteratorGeneratorU.next();
       }
 
-      if (!result.iteratorU.done) {
-        result.match = this.compareExpressions(result).match;
-      }
-
+      if (!result.iteratorU.done) result.match = this.compareExpressions(result).match;
+      else result.match = false;
       // case Ending Token in Input
     } else {
       // Iterate until end of sentence
