@@ -8,6 +8,8 @@
 const ContextMutator = require('../contextMutator');
 const { ExactStrategy } = require('./strategies');
 
+const equalsText = (a, b) => a.length === b.length && a.every((t, i) => t.text === b[i].text);
+
 /**
  * @class Comparator
  */
@@ -26,7 +28,7 @@ class Comparator {
     let result = { context: [], match: false, confidence: 1.0 };
 
     // Simpliest strict word token equality check
-    result.match = [...linkedListI.values()].equalsText([...linkedListU.values()]);
+    result.match = equalsText([...linkedListI.values()], [...linkedListU.values()]);
 
     // Expressioned equality check
     if (!result.match) {
@@ -89,7 +91,7 @@ class Comparator {
             break;
           }
           const { ner, text: textU } = result.iteratorU.value;
-          result.match = expression.name === ner.name || (expression.row && expression.row === ner.name);
+          result.match = expression.name === ner.name || expression.name === ner.row; // row used to handle sub enum entity
 
           if (result.match) {
             // TODO Will change after the NER TOKEN Implementation => ner.value ? ner.row ? ner.match ...
@@ -167,8 +169,5 @@ class Comparator {
     return result;
   }
 }
-
-/* eslint no-extend-native: ["error", { "exceptions": ["Array"] }] */
-Array.prototype.equalsText = a => this.length === a.length && this.every((t, i) => t.text === a[i].text);
 
 module.exports = { Comparator };

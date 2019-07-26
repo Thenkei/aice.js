@@ -4,16 +4,25 @@ const { expect } = chai;
 
 const { Comparator } = require('../../src/utils');
 
-const { InputExpressionTokenizer } = require('../../src/streamTransformers');
-
-const { NERManager, SystemEntities } = require('../../src/streamTransformers');
-
-const { NERTokenizer } = require('../../src/streamTransformers');
+const {
+  EnumEntity,
+  NERTokenizer,
+  NERManager,
+  SystemEntities,
+  InputExpressionTokenizer,
+} = require('../../src/streamTransformers');
 
 const LANG = 'fr';
 
 describe('Entities Comparator', () => {
   const ner = new NERManager();
+  ner.addNamedEntity(
+    new EnumEntity({
+      name: 'size',
+      scope: 'global',
+      enumeration: [{ key: 'S', values: ['small'] }, { key: 'M', values: ['medium'] }, { key: 'L', values: ['large'] }],
+    }),
+  );
   const tokenizerUtterance = new NERTokenizer(LANG, ner);
   const tokenizerInput = new InputExpressionTokenizer();
   const simpleComparator = new Comparator();
@@ -66,5 +75,16 @@ describe('Entities Comparator', () => {
 
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
+  });
+
+  it('Compare should sub enum entity', () => {
+    const input = '@S @M @L';
+    const utterance = 'small medium large';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
   });
 });
