@@ -44,9 +44,11 @@ class SimpleOutputRenderer extends OutputRenderer {
     // Retrieve all answers for this lang
     const filtredAnswers = output.answers.filter(a => a.lang === lang);
     const res = filtredAnswers.filter(ans => {
-      // Call pre-WSs
-      // const renderedParameter = ws.parameters.map(p => OutputRenderer.render(p, context);
-      // await ans.preWSs.forEach(ws => WebServiceHandler.handle(ws, renderedParameter, context);
+      const { preConditionsCallable, preRenderCallable } = ans;
+      // Call pre-conditions callables
+      const preCondCallableContext = typeof preConditionsCallable === 'function' ? preConditionsCallable(context) : {};
+      // eslint-disable-next-line no-param-reassign
+      context = { ...context, ...preCondCallableContext };
 
       // Check Conditions
       const conditionChecked = ans.conditions.reduce(
@@ -58,8 +60,10 @@ class SimpleOutputRenderer extends OutputRenderer {
         return false;
       }
 
-      // Call WSs
-      // await ans.WSs.forEach(ws => ws.call(context));
+      // Call pre-render callables
+      const preRenderContext = typeof preRenderCallable === 'function' ? preRenderCallable(context) : {};
+      // eslint-disable-next-line no-param-reassign
+      context = { ...context, ...preRenderContext };
 
       // Final Check Context Evaluation
       return Renderer.isRenderable(ans.tokenizedOutput, context);

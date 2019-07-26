@@ -60,7 +60,7 @@ class AICE {
     }
   }
 
-  addOutput(lang, intentid, output, preWSs = [], conditions = [], WSs = []) {
+  addOutput(lang, intentid, output, preConditionsCallable = () => {}, conditions = [], preRenderCallable = () => {}) {
     if (!lang || !output || !intentid) {
       throw new Error('AICE addOutput - Has some missing mandatory parameters');
     }
@@ -69,9 +69,9 @@ class AICE {
       lang,
       output,
       tokenizedOutput,
-      preWSs,
+      preConditionsCallable,
       conditions,
-      WSs,
+      preRenderCallable,
     };
 
     const intentOutput = this.outputs.find(o => o.intentid === intentid);

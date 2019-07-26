@@ -104,4 +104,61 @@ describe('SimpleOutputRenderer', () => {
     expect(result.score).to.equal(0.99);
     expect([goodAnwser, alsoMultiAnwser]).to.include(result.renderResponse);
   });
+
+  it('Should process answers - preRenderCallable', () => {
+    const getName = () => ({ name: 'slim shady' });
+    const renderer = new SimpleOutputRenderer({
+      outputs: [
+        {
+          intentid: 1,
+          answers: [
+            {
+              lang: 'fr',
+              tokenizedOutput: tokenizerOutput.tokenize('Ceci est une reponse {{name}}'),
+              preRenderCallable: getName,
+              conditions: [],
+            },
+            { lang: 'en', tokenizedOutput: tokenizerOutput.tokenize('This is not the good answer'), conditions: [] },
+          ],
+        },
+      ],
+    });
+
+    const result = renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    expect(result.score).to.equal(0.99);
+    expect(result.renderResponse).to.include('Ceci est une reponse slim shady');
+  });
+
+  it('Should process answers - preConditionsCallable & preRenderCallable', () => {
+    const preConditionsCallable = () => ({ number: 1 });
+    const incrementNumberCallable = context => ({ number: context.number + 1 });
+    const renderer = new SimpleOutputRenderer({
+      outputs: [
+        {
+          intentid: 1,
+          answers: [
+            {
+              lang: 'fr',
+              tokenizedOutput: tokenizerOutput.tokenize('Ceci est une reponse {{number}}'),
+              preConditionsCallable,
+              preRenderCallable: incrementNumberCallable,
+              conditions: [
+                {
+                  type: 'LeftRightExpression',
+                  operande: 'eq',
+                  Lvalue: { type: 'VARIABLE', value: 'number' },
+                  Rvalue: 1,
+                },
+              ],
+            },
+            { lang: 'en', tokenizedOutput: tokenizerOutput.tokenize('This is not the good answer'), conditions: [] },
+          ],
+        },
+      ],
+    });
+
+    const result = renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    expect(result.score).to.equal(0.99);
+    expect(result.renderResponse).to.include('Ceci est une reponse 2');
+  });
 });
