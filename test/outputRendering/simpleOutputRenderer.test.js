@@ -192,4 +192,18 @@ describe('SimpleOutputRenderer', () => {
       'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
     );
   });
+
+  it('Should process answers - return context', async () => {
+    const renderer = new SimpleOutputRenderer({
+      outputs: [
+        {
+          intentid: 1,
+          answers: [{ lang: 'fr', tokenizedOutput: tokenizerOutput.tokenize('Code<<code="state">>') }],
+        },
+      ],
+    });
+    const result = await renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    expect(result.context.code).to.equal('state');
+    expect(result.renderResponse).to.equal('Code');
+  });
 });

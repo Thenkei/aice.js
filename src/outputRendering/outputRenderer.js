@@ -88,7 +88,7 @@ class SimpleOutputRenderer extends OutputRenderer {
           );
           break;
       }
-      return { intentid, score, renderResponse };
+      return { intentid, score, renderResponse, context };
     }
     return undefined;
   }
