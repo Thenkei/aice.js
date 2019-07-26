@@ -27,7 +27,7 @@ class OutputRenderingManager {
     // this.outputRenderers.forEach(or => or.train(outputs));
   }
 
-  process(lang, intents = [], context) {
+  async process(lang, intents = [], context) {
     // Will need some more mechanics before using multiple OutputRenderer techniques
     // If context.internal_slotfilling use SlotFillingRenderer
     // else use SimpleRenderer

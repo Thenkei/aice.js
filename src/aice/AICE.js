@@ -92,7 +92,7 @@ class AICE {
     this.OutputRenderingManager.train(this.outputs);
   }
 
-  process(utterance, context) {
+  async process(utterance, context) {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
     const tokenizedUtterance = this.NERTokenizer.tokenize(utterance);
@@ -102,7 +102,7 @@ class AICE {
     context = { ...context, ...result[0].context };
 
     // Output Rendering
-    const answer = this.OutputRenderingManager.process(LANG, result, context);
+    const answer = await this.OutputRenderingManager.process(LANG, result, context);
 
     return {
       answer: (answer || {}).renderResponse,

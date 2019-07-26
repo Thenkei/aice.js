@@ -9,6 +9,15 @@ class Utils {
   static flatten(array) {
     return array.reduce((x, y) => x.concat(Array.isArray(y) ? Utils.flatten(y) : y), []);
   }
+
+  static mapAsync(array, callbackfn) {
+    return Promise.all(array.map(callbackfn));
+  }
+
+  static async filterAsync(array, callbackfn) {
+    const filterMap = await Utils.mapAsync(array, callbackfn);
+    return array.filter((value, index) => filterMap[index]);
+  }
 }
 
 module.exports = Utils;

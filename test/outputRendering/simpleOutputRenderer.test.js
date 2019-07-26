@@ -2,20 +2,22 @@ const chai = require('chai');
 
 const { expect } = chai;
 
+const fetch = require('node-fetch');
+
 const { SimpleOutputRenderer } = require('../../src/outputRendering');
 
 const { OutputExpressionTokenizer } = require('../../src/streamTransformers');
 
 describe('SimpleOutputRenderer', () => {
   const tokenizerOutput = new OutputExpressionTokenizer();
-  it('Should process empty intents', () => {
+  it('Should process empty intents', async () => {
     const renderer = new SimpleOutputRenderer({});
 
-    const result = renderer.process('fr', [], {});
+    const result = await renderer.process('fr', [], {});
     expect(result).to.equal(undefined);
   });
 
-  it('Should process answers - lang filtering', () => {
+  it('Should process answers - lang filtering', async () => {
     const renderer = new SimpleOutputRenderer({
       outputs: [
         {
@@ -28,12 +30,12 @@ describe('SimpleOutputRenderer', () => {
       ],
     });
 
-    const result = renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    const result = await renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
     expect(result.score).to.equal(0.99);
     expect(result.renderResponse).to.equal('Ceci est une reponse');
   });
 
-  it('Should process answers - lang filtering but no response', () => {
+  it('Should process answers - lang filtering but no renderable response', async () => {
     const renderer = new SimpleOutputRenderer({
       outputs: [
         {
@@ -50,7 +52,7 @@ describe('SimpleOutputRenderer', () => {
       ],
     });
 
-    const result = renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    const result = await renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
     expect(result).to.equal(undefined);
   });
 
@@ -78,34 +80,34 @@ describe('SimpleOutputRenderer', () => {
     ],
   };
 
-  it('Should process answers - output type single', () => {
+  it('Should process answers - output type single', async () => {
     settings.outputs[0].outputType = 'single';
     const renderer = new SimpleOutputRenderer(settings);
 
-    const result = renderer.process('en', [{ intentid: 1, score: 0.99 }], {});
+    const result = await renderer.process('en', [{ intentid: 1, score: 0.99 }], {});
     expect(result.score).to.equal(0.99);
     expect(result.renderResponse).to.equal(goodAnwser);
   });
 
-  it('Should process answers - output type multiple', () => {
+  it('Should process answers - output type multiple', async () => {
     settings.outputs[0].outputType = 'multiple';
     const renderer = new SimpleOutputRenderer(settings);
 
-    const result = renderer.process('en', [{ intentid: 1, score: 0.99 }], {});
+    const result = await renderer.process('en', [{ intentid: 1, score: 0.99 }], {});
     expect(result.score).to.equal(0.99);
     expect(result.renderResponse).to.equal(goodAnwser + alsoMultiAnwser); // TODO NEED TO CHANGE [This is the good answer, This is also a good answer in multiple]
   });
 
-  it('Should process answers - random', () => {
+  it('Should process answers - random', async () => {
     settings.outputs[0].outputType = 'random';
     const renderer = new SimpleOutputRenderer(settings);
 
-    const result = renderer.process('en', [{ intentid: 1, score: 0.99 }], {});
+    const result = await renderer.process('en', [{ intentid: 1, score: 0.99 }], {});
     expect(result.score).to.equal(0.99);
     expect([goodAnwser, alsoMultiAnwser]).to.include(result.renderResponse);
   });
 
-  it('Should process answers - preRenderCallable', () => {
+  it('Should process answers - preRenderCallable', async () => {
     const getName = () => ({ name: 'slim shady' });
     const renderer = new SimpleOutputRenderer({
       outputs: [
@@ -124,12 +126,12 @@ describe('SimpleOutputRenderer', () => {
       ],
     });
 
-    const result = renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    const result = await renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
     expect(result.score).to.equal(0.99);
     expect(result.renderResponse).to.include('Ceci est une reponse slim shady');
   });
 
-  it('Should process answers - preConditionsCallable & preRenderCallable', () => {
+  it('Should process answers - preConditionsCallable & preRenderCallable', async () => {
     const preConditionsCallable = () => ({ number: 1 });
     const incrementNumberCallable = context => ({ number: context.number + 1 });
     const renderer = new SimpleOutputRenderer({
@@ -157,8 +159,37 @@ describe('SimpleOutputRenderer', () => {
       ],
     });
 
-    const result = renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    const result = await renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
     expect(result.score).to.equal(0.99);
     expect(result.renderResponse).to.include('Ceci est une reponse 2');
+  });
+
+  it('Should process answers - async/await web service call', async () => {
+    const preConditionsCallable = async () => {
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts/1');
+      const jsonRes = await res.json();
+      const { body } = jsonRes;
+      return { body };
+    };
+    const renderer = new SimpleOutputRenderer({
+      outputs: [
+        {
+          intentid: 1,
+          answers: [
+            {
+              lang: 'fr',
+              tokenizedOutput: tokenizerOutput.tokenize('{{body}}'),
+              preConditionsCallable,
+            },
+          ],
+        },
+      ],
+    });
+
+    const result = await renderer.process('fr', [{ intentid: 1, score: 0.99 }], {});
+    expect(result.score).to.equal(0.99);
+    expect(result.renderResponse).to.equal(
+      'quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto',
+    );
   });
 });

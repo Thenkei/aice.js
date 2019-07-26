@@ -19,4 +19,10 @@ describe('Utils', () => {
     const array1 = [1, 2, []];
     expect(Utils.flatten(array1)).to.eql([1, 2]);
   });
+
+  it('Utils - filterAsync', async () => {
+    const array1 = [1, 2];
+    const result = await Utils.filterAsync(array1, v => v > 1);
+    expect(result).to.eql([2]);
+  });
 });

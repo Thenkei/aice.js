@@ -7,7 +7,7 @@ const { AICE } = require('../src/');
 const { SystemEntities, RegExpEntity } = require('../src/streamTransformers');
 
 describe('AICE NLP', () => {
-  it('Basic Use Case - All API', () => {
+  it('Basic Use Case - All API', async () => {
     const aice = new AICE();
     // Initialization
     aice.addInput('fr', 'Bonjour', 'agent.presentation');
@@ -36,17 +36,17 @@ describe('AICE NLP', () => {
 
     // Tests
     const context = {};
-    let res = aice.process('bonjour', context);
+    let res = await aice.process('bonjour', context);
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.presentation');
     expect(res.answer).to.equal('Coucou :)');
 
-    res = aice.process("Superbe, je m'appelle Morgan", context);
+    res = await aice.process("Superbe, je m'appelle Morgan", context);
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.askname');
     expect(res.answer).to.equal('Hello Morgan');
 
-    res = aice.process('Squeezie ft Joyca - Bye Bye', context);
+    res = await aice.process('Squeezie ft Joyca - Bye Bye', context);
     expect(res.score).to.equal(1.0);
     expect(res.intent).to.equal('agent.bye');
     expect(res.answer).to.equal('A la prochaine!');

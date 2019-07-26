@@ -23,11 +23,12 @@ describe('OutputRenderer', () => {
     expect(renderer.outputs).to.eql([1]);
   });
 
-  it('Should throw error, process need to be override in sub-class', () => {
+  it('Should throw error, process need to be override in sub-class', async () => {
     const renderer = new OutputRenderer({ name: 'test-renderer' });
-
-    expect(() => renderer.process()).to.throw(
-      'Invalid OutputRenderer - process() should be implemented in child class',
-    );
+    await renderer
+      .process()
+      .catch(err =>
+        expect(err.message).to.equal('Invalid OutputRenderer - process() should be implemented in child class'),
+      );
   });
 });

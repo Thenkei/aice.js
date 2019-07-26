@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * Copyright (c) 2015-present, CWB SAS
  *
@@ -5,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { ConditionEvaluator, Renderer } = require('../utils');
+const { ConditionEvaluator, Renderer, Utils } = require('../utils');
 
 class OutputRenderer {
   constructor({ name, settings, outputs }) {
@@ -22,7 +23,7 @@ class OutputRenderer {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  process() {
+  async process() {
     throw new Error('Invalid OutputRenderer - process() should be implemented in child class');
   }
 }
@@ -32,7 +33,7 @@ class SimpleOutputRenderer extends OutputRenderer {
     super({ settings, outputs, name: 'simple-output-rendering' });
   }
 
-  process(lang, intents, context) {
+  async process(lang, intents, context) {
     const { intentid, score } = intents[0] || {}; // Best match for now
 
     // Retrieve output object for this intentid
@@ -43,26 +44,25 @@ class SimpleOutputRenderer extends OutputRenderer {
 
     // Retrieve all answers for this lang
     const filtredAnswers = output.answers.filter(a => a.lang === lang);
-    const res = filtredAnswers.filter(ans => {
-      const { preConditionsCallable, preRenderCallable } = ans;
+    const res = await Utils.filterAsync(filtredAnswers, async ans => {
+      const { preConditionsCallable, conditions, preRenderCallable } = ans;
+
       // Call pre-conditions callables
-      const preCondCallableContext = typeof preConditionsCallable === 'function' ? preConditionsCallable(context) : {};
-      // eslint-disable-next-line no-param-reassign
+      const preCondCallableContext =
+        typeof preConditionsCallable === 'function' ? await preConditionsCallable(context) : {};
       context = { ...context, ...preCondCallableContext };
 
       // Check Conditions
-      const conditionChecked = ans.conditions.reduce(
-        (accumulator, condition) => accumulator && ConditionEvaluator.evaluate(condition, context),
-        true,
-      );
-
-      if (!conditionChecked) {
-        return false;
-      }
+      const conditionChecked = conditions
+        ? conditions.reduce(
+            (accumulator, condition) => accumulator && ConditionEvaluator.evaluate(condition, context),
+            true,
+          )
+        : true;
+      if (!conditionChecked) return false;
 
       // Call pre-render callables
-      const preRenderContext = typeof preRenderCallable === 'function' ? preRenderCallable(context) : {};
-      // eslint-disable-next-line no-param-reassign
+      const preRenderContext = typeof preRenderCallable === 'function' ? await preRenderCallable(context) : {};
       context = { ...context, ...preRenderContext };
 
       // Final Check Context Evaluation
