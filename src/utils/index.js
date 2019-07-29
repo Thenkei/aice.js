@@ -7,6 +7,7 @@
 
 const {
   Comparator,
+  UnorderComparator,
   StrategyComparator,
   ExactStrategy,
   LevenshteinStrategy,
@@ -25,6 +26,7 @@ const openNLXSyntaxAdapter = require('./openNLXSyntaxAdapter');
 
 module.exports = {
   Comparator,
+  UnorderComparator,
   ContextMutator,
   ConditionEvaluator,
   StrategyComparator,
