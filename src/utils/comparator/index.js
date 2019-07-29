@@ -6,12 +6,13 @@
  */
 
 const { Comparator } = require('./comparator');
-const { UnorderComparator } = require('./unorderComparator');
+const { UnorderComparator, LazzyUnorderComparator } = require('./unorderComparator');
 const { StrategyComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy } = require('./strategies');
 
 module.exports = {
   Comparator,
   UnorderComparator,
+  LazzyUnorderComparator,
   StrategyComparator,
   ExactStrategy,
   LevenshteinStrategy,

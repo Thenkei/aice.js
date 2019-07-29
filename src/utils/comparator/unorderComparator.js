@@ -30,17 +30,28 @@ class LazzyUnorderComparator extends Comparator {
     result.match = true;
 
     result.iteratorGeneratorI = linkedListI.values();
+    result.iteratorGeneratorU = linkedListU.values();
     result.iteratorI = result.iteratorGeneratorI.next();
+    result.iteratorU = result.iteratorGeneratorU.next();
     let score = 0;
     let unusedExpression = 0;
 
     while (!result.iteratorI.done) {
       const { expression } = result.iteratorI.value;
-      if (expression !== 'ANY' && expression !== 'ANYORNOTHING') {
-        for (result.iteratorU of linkedListU.lists()) {
-          result = this.compareExpressions(result);
-          if (result.match) {
-            score += 1;
+      if (!expression || (expression && expression.type !== 'ANY' && expression.type !== 'ANYORNOTHING')) {
+        result = this.compareExpressions(result);
+        if (result.match) {
+          score += 1;
+          result.iteratorU = result.iteratorGeneratorU.next();
+        } else {
+          result.iteratorGeneratorU = linkedListU.values();
+          result.iteratorU = result.iteratorGeneratorU.next();
+          while (!result.iteratorU.done && !result.match) {
+            result = this.compareExpressions(result);
+            if (result.match) {
+              score += 1;
+            }
+            result.iteratorU = result.iteratorGeneratorU.next();
           }
         }
       } else {
@@ -55,6 +66,7 @@ class LazzyUnorderComparator extends Comparator {
     delete result.iteratorU;
 
     if (score !== 0) result.confidence = score / ([...linkedListI].length - unusedExpression);
+    else result.confidence = 0;
     result.match = score > 0;
 
     return result;
@@ -91,7 +103,7 @@ class UnorderComparator extends Comparator {
 
     while (!result.iteratorI.done) {
       const { expression } = result.iteratorI.value;
-      if (expression !== 'ANY' && expression !== 'ANYORNOTHING') {
+      if (!expression || (expression && expression.type !== 'ANY' && expression.type !== 'ANYORNOTHING')) {
         result = this.compareExpressions(result);
         if (result.match) {
           if (bags.length > 0) {
