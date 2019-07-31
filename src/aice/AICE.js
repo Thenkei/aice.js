@@ -108,7 +108,7 @@ class AICE {
       answer: (answer || {}).renderResponse,
       score: answer ? answer.score : 0,
       intent: (answer || {}).intentid,
-      context: answer.context || context,
+      context: (answer && answer.context) || context,
     };
   }
 }
