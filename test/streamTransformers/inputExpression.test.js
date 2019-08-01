@@ -51,6 +51,28 @@ describe('InputExpressionTokenizer', () => {
     expect(it.next().done).to.equal(true);
   });
 
+  it('Full InputExpressionTokenization - with full NLX syntax', () => {
+    const input = '{{^}}{{pizza=@pizzatype}}{{*}}';
+
+    const sentenceI = inputExpressionTokenizer.tokenize(input);
+    const it = sentenceI.values();
+
+    const firstNode = it.next().value.expression;
+    expect(firstNode.type).to.equal('ANYORNOTHING');
+    expect(firstNode.contextName).to.equal(undefined);
+
+    const secondeNode = it.next().value.expression;
+    expect(secondeNode.type).to.equal('ENTITY');
+    expect(secondeNode.contextName).to.equal('pizza');
+    expect(secondeNode.name).to.equal('pizzatype');
+
+    const thirdNode = it.next().value.expression;
+    expect(thirdNode.type).to.equal('ANY');
+    expect(thirdNode.contextName).to.equal(undefined);
+
+    expect(it.next().done).to.equal(true);
+  });
+
   it('Full InputExpressionTokenization - wrong NLX syntax', () => {
     const input = '@email';
 

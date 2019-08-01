@@ -47,14 +47,14 @@ class InputExpressionTokenizer {
      */
     this.expressionParser = new ExpressionParser([
       {
-        regex: /{{([^ ]+?=[^ }]+?)}}/,
+        regex: /{{([^ }]+?=[^ }]+?)}}/,
         parser: match => {
           const matchs = match.split('=');
 
-          const expression = this.subExpressionParser.parseFromText(matchs[1])[0];
+          const { expression } = this.subExpressionParser.parseFromText(matchs[1])[0];
           const contextName = matchs[0];
 
-          return { ...expression.expression, contextName };
+          return { ...expression, contextName };
         },
       },
       {
