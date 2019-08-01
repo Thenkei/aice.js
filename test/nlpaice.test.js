@@ -10,25 +10,25 @@ describe('AICE NLP', () => {
   it('Basic Use Case - All API', async () => {
     const aice = new AICE();
     // Initialization
-    aice.addInput('fr', 'Bonjour', 'agent.presentation');
-    aice.addInput('fr', 'Coucou', 'agent.presentation');
-    aice.addInput('fr', 'Salut', 'agent.presentation');
+    aice.addInput('fr', 'agent.presentation', 'Bonjour');
+    aice.addInput('fr', 'agent.presentation', 'Coucou');
+    aice.addInput('fr', 'agent.presentation', 'Salut');
 
     aice.addOutput('fr', 'agent.presentation', 'Coucou :)');
 
-    aice.addInput('fr', '^je suis {{name=*}}', 'agent.askname');
-    aice.addInput('fr', "^je m'appelle {{name=*}}", 'agent.askname');
+    aice.addInput('fr', 'agent.askname', '^je suis {{name=*}}');
+    aice.addInput('fr', 'agent.askname', "^je m'appelle {{name=*}}");
 
     aice.addOutput('fr', 'agent.askname', 'Hello {{name}}');
 
-    aice.addInput('fr', '^bye^', 'agent.bye');
-    aice.addInput('fr', '^a la prochaine^', 'agent.bye');
-    aice.addInput('fr', '^bonne journée^', 'agent.bye');
+    aice.addInput('fr', 'agent.bye', '^bye^');
+    aice.addInput('fr', 'agent.bye',  '^a la prochaine^');
+    aice.addInput('fr', 'agent.bye', '^bonne journée^');
 
     aice.addOutput('fr', 'agent.bye', 'A la prochaine!');
 
     // Fallback
-    aice.addInput('fr', '*', 'agent.fallback');
+    aice.addInput('fr', 'agent.fallback', '*');
 
     aice.addOutput('fr', 'agent.fallback', "Je n'ai pas compris");
 
