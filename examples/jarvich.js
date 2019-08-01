@@ -15,29 +15,29 @@ const ctxt = {};
   let start = +Date.now();
   const nlp = new AICE();
   // Fallback
-  nlp.addInput('fr', '*', 'agent.fallback');
+  nlp.addInput('fr', 'agent.fallback', '*');
 
   nlp.addOutput('fr', 'agent.fallback', 'Je ne comprends pas.', 'fr');
   nlp.addOutput('fr', 'agent.fallback', 'Je ne sais pas quoi vous répondre.', 'fr');
   nlp.addOutput('fr', 'agent.fallback', "J'essaie' de m'améliorer mais la je bloque...", 'fr');
   nlp.addOutput('fr', 'agent.fallback', 'Je ne comprends pas vraiment pas.', 'fr');
 
-  nlp.addInput('fr', 'Bonjour^', 'agent.presentation');
-  nlp.addInput('fr', 'Coucou^', 'agent.presentation');
-  nlp.addInput('fr', 'Salut^', 'agent.presentation');
-  nlp.addInput('fr', 'Hello^', 'agent.presentation');
+  nlp.addInput('fr', 'agent.presentation', 'Bonjour{{^}}');
+  nlp.addInput('fr', 'agent.presentation', 'Coucou{{^}}');
+  nlp.addInput('fr', 'agent.presentation', 'Salut{{^}}');
+  nlp.addInput('fr', 'agent.presentation', 'Hello{{^}}');
 
   nlp.addOutput('fr', 'agent.presentation', 'Coucou :)', 'fr');
 
-  nlp.addInput('fr', '^je suis {{name=*}}', 'agent.askname');
-  nlp.addInput('fr', "^je m'appelle {{name=*}}", 'agent.askname');
+  nlp.addInput('fr', 'agent.askname', '{{^}}je suis {{name=*}}');
+  nlp.addInput('fr', 'agent.askname', "{{^}}je m'appelle {{name=*}}");
 
   nlp.addOutput('fr', 'agent.askname', 'Hello {{name}}', 'fr');
 
-  nlp.addInput('fr', '^bye^', 'agent.bye');
-  nlp.addInput('fr', '^a la prochaine^', 'agent.bye');
-  nlp.addInput('fr', '^a plus^', 'agent.bye');
-  nlp.addInput('fr', '^bonne journée^', 'agent.bye');
+  nlp.addInput('fr', 'agent.bye', '{{^}}bye{{^}}');
+  nlp.addInput('fr', 'agent.bye', '{{^}}a la prochaine{{^}}');
+  nlp.addInput('fr', 'agent.bye', '{{^}}a plus{{^}}');
+  nlp.addInput('fr', 'agent.bye', '{{^}}bonne journée{{^}}');
 
   nlp.addOutput('fr', 'agent.bye', 'A la prochaine!', 'fr');
 

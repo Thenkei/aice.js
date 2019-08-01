@@ -9,7 +9,7 @@ const AICE = require('./AICE');
 
 const addIntent = (aice, { name: intentid, inputs, outputs, outputType, topic = '*', previous }, lang = 'fr') => {
   // IntentsInputs
-  inputs.forEach(i => aice.addInput(lang, i.inputMessage, intentid, topic, previous));
+  inputs.forEach(i => aice.addInput(lang, intentid, i.inputMessage, topic, previous));
 
   // IntentsOutputs
   const answers = outputs.map(o => {
@@ -17,7 +17,7 @@ const addIntent = (aice, { name: intentid, inputs, outputs, outputType, topic = 
     const answer = {
       lang,
       tokenizedOutput,
-      preWSs: [],
+      preWSs: undefined,
       conditions: o.conditions,
       WSs: o.WSs,
     };

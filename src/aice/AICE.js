@@ -48,7 +48,7 @@ class AICE {
       this.NERManager.addNamedEntity(namedEntity);
   }
 
-  addInput(lang, input, intentid) {
+  addInput(lang, intentid, input) {
     if (!lang || !input || !intentid) {
       throw new Error('AICE addInput - Has some missing mandatory parameters');
     }

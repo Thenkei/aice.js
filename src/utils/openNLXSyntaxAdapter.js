@@ -114,6 +114,7 @@ const parseAdaptOutputsSyntax = oldOutputs => {
 const parseAdaptInputsSyntax = oldInputs => {
   const inputs = [];
   oldInputs.forEach(oldInput => {
+    // TODO transformer * -> {{*}} || ^ -> {{^}} || @entity -> {{@entity}}
     const input = { inputMessage: oldInput };
 
     inputs.push(input);

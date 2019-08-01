@@ -102,7 +102,7 @@ describe('Levenshtein Comparator', () => {
   });
 
   it('Should match Complexe Sentences with typing error', () => {
-    const input = '^my name is {{name=*}} shady ^';
+    const input = '{{^}}my name is {{name=*}} shady {{^}}';
     const utterance = 'Hello, my nqme is slime shady ! REPU';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -114,7 +114,7 @@ describe('Levenshtein Comparator', () => {
   });
 
   it('Should match Complexe Sentences with typing error 2', () => {
-    const input = '^my name is {{name=*}} shady ^';
+    const input = '{{^}}my name is {{name=*}} shady {{^}}';
     const utterance = 'Hello, my nqme is slime shody ! REPU';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -152,7 +152,7 @@ describe('Demerau-Levenshtein Comparator', () => {
   });
 
   it('Should match Complexe Sentences with typing error', () => {
-    const input = '^my name is {{name=*}} shady ^';
+    const input = '{{^}}my name is {{name=*}} shady {{^}}';
     const utterance = 'Hello, my nqme is slime shady !!! Some text';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -164,7 +164,7 @@ describe('Demerau-Levenshtein Comparator', () => {
   });
 
   it('Should match Complexe Sentences with typing error 2', () => {
-    const input = '^my name is {{name=*}} shady ^';
+    const input = '{{^}}my name is {{name=*}} shady {{^}}';
     const utterance = 'Hello, my nqme is slim shody !!!!!! REPU';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -223,8 +223,8 @@ describe('Demerau-Levenshtein Comparator', () => {
 
 describe('Expression Any/AnyOrNothing simpleComparator', () => {
   const simpleComparator = new Comparator();
-  it('Compare "*" to "" should be false', () => {
-    const input = '*';
+  it('Compare "{{*}}" to "" should be false', () => {
+    const input = '{{*}}';
     const utterance = '';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -235,8 +235,8 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
     expect(result.confidence).to.equal(1.0);
   });
 
-  it('Compare "*" to "something" should be true', () => {
-    const input = '*';
+  it('Compare "{{*}}" to "something" should be true', () => {
+    const input = '{{*}}';
     const utterance = 'something';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -248,8 +248,8 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
     expect(result.context.any).to.equal('something');
   });
 
-  it('Compare "^" to "" should be true', () => {
-    const input = '^';
+  it('Compare "{{^}}" to "" should be true', () => {
+    const input = '{{^}}';
     const utterance = '';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -261,8 +261,8 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
     expect(result.context.anyornothing).to.equal('');
   });
 
-  it('Compare "^" to "something" should be true', () => {
-    const input = '^';
+  it('Compare "{{^}}" to "something" should be true', () => {
+    const input = '{{^}}';
     const utterance = 'something';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -274,8 +274,8 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
     expect(result.context.anyornothing).to.equal('something');
   });
 
-  it('Compare "Hello *" to "Hello Bob!" should be true', () => {
-    const input = 'Hello *';
+  it('Compare "Hello {{*}}" to "Hello Bob!" should be true', () => {
+    const input = 'Hello {{*}}';
     const utterance = 'Hello Bob!';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -287,8 +287,8 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
     expect(result.context.any).to.equal('Bob');
   });
 
-  it('Compare "Hello ^" to "Hello Bob!" should be true', () => {
-    const input = 'Hello ^';
+  it('Compare "Hello {{^}}" to "Hello Bob!" should be true', () => {
+    const input = 'Hello {{^}}';
     const utterance = 'Hello Bob!';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -300,8 +300,8 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
     expect(result.context.anyornothing).to.equal('Bob');
   });
 
-  it('Compare "^Hello^" to "Hello" should be true', () => {
-    const input = '^Hello^';
+  it('Compare "{{^}}Hello{{^}}" to "Hello" should be true', () => {
+    const input = '{{^}}Hello{{^}}';
     const utterance = 'Hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -313,8 +313,8 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
     expect(result.context.anyornothing).to.equal('');
   });
 
-  it('Compare "^Hello^" to "Hello Bob!" should be true', () => {
-    const input = '^Hello^';
+  it('Compare "{{^}}Hello{{^}}" to "Hello Bob!" should be true', () => {
+    const input = '{{^}}Hello{{^}}';
     const utterance = 'Bob Hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -329,8 +329,8 @@ describe('Expression Any/AnyOrNothing simpleComparator', () => {
 
 describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
   const levenshteinComparator = new Comparator(new LevenshteinStrategy());
-  it('Compare "*" to "" should be false', () => {
-    const input = '*';
+  it('Compare "{{*}}" to "" should be false', () => {
+    const input = '{{*}}';
     const utterance = '';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -341,8 +341,8 @@ describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
     expect(result.confidence).to.equal(1.0);
   });
 
-  it('Compare "*" to "something" should be true', () => {
-    const input = '*';
+  it('Compare "{{*}}" to "something" should be true', () => {
+    const input = '{{*}}';
     const utterance = 'something';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -354,8 +354,8 @@ describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
     expect(result.context.any).to.equal('something');
   });
 
-  it('Compare "^" to "" should be true', () => {
-    const input = '^';
+  it('Compare "{{^}}" to "" should be true', () => {
+    const input = '{{^}}';
     const utterance = '';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -367,8 +367,8 @@ describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
     expect(result.context.anyornothing).to.equal('');
   });
 
-  it('Compare "^" to "something" should be true', () => {
-    const input = '^';
+  it('Compare "{{^}}" to "something" should be true', () => {
+    const input = '{{^}}';
     const utterance = 'something';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -380,8 +380,8 @@ describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
     expect(result.context.anyornothing).to.equal('something');
   });
 
-  it('Compare "Hello *" to "Hello Bob!" should be true', () => {
-    const input = 'Hello *';
+  it('Compare "Hello {{*}}" to "Hello Bob!" should be true', () => {
+    const input = 'Hello {{*}}';
     const utterance = 'Hello Bob!';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -393,8 +393,8 @@ describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
     expect(result.context.any).to.equal('Bob');
   });
 
-  it('Compare "Hello ^" to "Hello Bob!" should be true', () => {
-    const input = 'Hello ^';
+  it('Compare "Hello {{^}}" to "Hello Bob!" should be true', () => {
+    const input = 'Hello {{^}}';
     const utterance = 'Hello Bob!';
 
     const sentenceI = tokenizerInput.tokenize(input);
