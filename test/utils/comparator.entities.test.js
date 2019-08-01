@@ -79,7 +79,7 @@ describe('Entities Comparator', () => {
   });
 
   it('Compare should sub enum entity', () => {
-    const input = '@S @M @L';
+    const input = '@size_s @size_m @size_l';
     const utterance = 'small medium large';
 
     const sentenceI = tokenizerInput.tokenize(input);

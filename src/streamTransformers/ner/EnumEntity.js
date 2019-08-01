@@ -43,7 +43,7 @@ class EnumEntity extends NamedEntity {
         if (located >= 0) {
           const entity = new Entity({
             match: utterance.slice(located, located + le.length),
-            row: enume.key,
+            row: `${this.name}_${enume.key}`.toLocaleLowerCase(),
             confidence: 1,
             type: this.type,
             name: this.name,
