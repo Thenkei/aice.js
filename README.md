@@ -40,23 +40,26 @@ It can be installed directly from NPM to be integrated in node.js application.
 **INPUT**
 ```
 TEXT            I'm a text
-INLINE_CODE     {{ }}
+INLINE_CODE     {{ }}           // Expression syntax
 
-SET             namevar='value'
-SET             namevar=varName
 SET             namevar=@entityName
 SET             namevar=*
-GET             namevar
+SET             namevar=^
 
 ANY             *
 ANYORNOTHING    ^
-ENTITY          @name // modify currentContext as entityName=@entityName
+ENTITY          @name           // modify currentContext as entityName=@entityName
 ```
 
 **OUTPUT**
 ```
-INLINE_CODE     {{ }} // rendered
-CODE            << >> // not rendered
+INLINE_CODE     {{ }}           // rendered
+CODE            << >>           // not rendered
+
+SET             namevar='value'
+SET             namevar=varName
+GET             namevar
+
 ```
 
 ## Contributing
