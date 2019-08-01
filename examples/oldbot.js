@@ -156,7 +156,7 @@ const bot = {
       outputType: 'multiple',
       inputs: [
         {
-          inputMessage: '{{^}} @email {{^}}',
+          inputMessage: '{{^}} {{@email}} {{^}}',
         },
       ],
       outputs: [
@@ -277,7 +277,7 @@ const bot = {
       outputType: 'random',
       inputs: [
         {
-          inputMessage: '{{^}} @way {{^}}',
+          inputMessage: '{{^}} {{@way}} {{^}}',
         },
       ],
       outputs: [
