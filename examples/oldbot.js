@@ -109,10 +109,10 @@ const bot = {
       outputType: 'random',
       inputs: [
         {
-          inputMessage: '^{{pizza=@pizzatype}} {{size=@pizzasize}}^',
+          inputMessage: '{{^}}{{pizza=@pizzatype}} {{size=@pizzasize}}{{^}}',
         },
         {
-          inputMessage: '^{{size=@pizzasize}} {{pizza=@pizzatype}}^',
+          inputMessage: '{{^}}{{size=@pizzasize}} {{pizza=@pizzatype}}{{^}}',
         },
       ],
       outputs: [
@@ -140,7 +140,7 @@ const bot = {
           inputMessage: 'pizza pizza pizza',
         },
         {
-          inputMessage: '^ pizza ^',
+          inputMessage: '{{^}} pizza {{^}}',
         },
       ],
       outputs: [
@@ -156,7 +156,7 @@ const bot = {
       outputType: 'multiple',
       inputs: [
         {
-          inputMessage: '^ @email ^',
+          inputMessage: '{{^}} @email {{^}}',
         },
       ],
       outputs: [
@@ -199,7 +199,7 @@ const bot = {
           inputMessage: 'Je me sens mal.',
         },
         {
-          inputMessage: 'Je ^ arrive pas.',
+          inputMessage: 'Je {{^}} arrive pas.',
         },
         {
           inputMessage: "Je n'y arrive pas.",
@@ -261,7 +261,7 @@ const bot = {
       outputType: 'random',
       inputs: [
         {
-          inputMessage: '^{{pizza=@pizzatype}}^',
+          inputMessage: '{{^}}{{pizza=@pizzatype}}{{^}}',
         },
       ],
       outputs: [
@@ -277,7 +277,7 @@ const bot = {
       outputType: 'random',
       inputs: [
         {
-          inputMessage: '^ @way ^',
+          inputMessage: '{{^}} @way {{^}}',
         },
       ],
       outputs: [

@@ -31,8 +31,8 @@ describe('Entities Comparator', () => {
     ner.addNamedEntity(e);
   });
 
-  it("Compare '@email' to 'john@doe.com' should be true", () => {
-    const input = '@email';
+  it("Compare '{{@email}}' to 'john@doe.com' should be true", () => {
+    const input = '{{@email}}';
     const utterance = 'john@doe.com';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -43,8 +43,8 @@ describe('Entities Comparator', () => {
     expect(result.context.email).to.equal(utterance);
   });
 
-  it("Compare '^@email^' to 'john@doe.com' should be true", () => {
-    const input = '^@email^';
+  it("Compare '{{^}}{{@email}}{{^}}' to 'john@doe.com' should be true", () => {
+    const input = '{{^}}{{@email}}{{^}}';
     const utterance = 'john@doe.com';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -56,8 +56,8 @@ describe('Entities Comparator', () => {
     expect(Object.entries(result.context).length).to.equal(3); // anyornothing email anyornothing_1
   });
 
-  it("Compare '^@email' to 'hello' should be false", () => {
-    const input = '^@email';
+  it("Compare '{{^}}{{@email}}' to 'hello' should be false", () => {
+    const input = '{{^}}{{@email}}';
     const utterance = 'hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -67,8 +67,8 @@ describe('Entities Comparator', () => {
     expect(result.match).to.equal(false);
   });
 
-  it("Compare '^@email' to 'hello' should be false", () => {
-    const input = '^@email @phonenumber';
+  it("Compare '{{^}} {{@email}} {{@phonenumber}}' to 'test@opla.ai' should be false", () => {
+    const input = '{{^}} {{@email}} {{@phonenumber}}';
     const utterance = 'test@opla.ai';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -79,7 +79,7 @@ describe('Entities Comparator', () => {
   });
 
   it('Compare should sub enum entity', () => {
-    const input = '@size_s @size_m @size_l';
+    const input = '{{@size_s}} {{@size_m}} {{@size_l}}';
     const utterance = 'small medium large';
 
     const sentenceI = tokenizerInput.tokenize(input);

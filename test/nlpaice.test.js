@@ -16,19 +16,19 @@ describe('AICE NLP', () => {
 
     aice.addOutput('fr', 'agent.presentation', 'Coucou :)');
 
-    aice.addInput('fr', 'agent.askname', '^je suis {{name=*}}');
-    aice.addInput('fr', 'agent.askname', "^je m'appelle {{name=*}}");
+    aice.addInput('fr', 'agent.askname', '{{^}} je suis {{name=*}}');
+    aice.addInput('fr', 'agent.askname', "{{^}} je m'appelle {{name=*}}");
 
     aice.addOutput('fr', 'agent.askname', 'Hello {{name}}');
 
-    aice.addInput('fr', 'agent.bye', '^bye^');
-    aice.addInput('fr', 'agent.bye',  '^a la prochaine^');
-    aice.addInput('fr', 'agent.bye', '^bonne journée^');
+    aice.addInput('fr', 'agent.bye', '{{^}}bye{{^}}');
+    aice.addInput('fr', 'agent.bye', '{{^}}a la prochaine{{^}}');
+    aice.addInput('fr', 'agent.bye', '{{^}}bonne journée{{^}}');
 
     aice.addOutput('fr', 'agent.bye', 'A la prochaine!');
 
     // Fallback
-    aice.addInput('fr', 'agent.fallback', '*');
+    aice.addInput('fr', 'agent.fallback', '{{*}}');
 
     aice.addOutput('fr', 'agent.fallback', "Je n'ai pas compris");
 

@@ -27,7 +27,7 @@ describe('Context Comparator', () => {
   });
 
   it('Should set context.any ANY', () => {
-    const input = '*';
+    const input = '{{*}}';
     const utterance = 'some text';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -65,8 +65,8 @@ describe('Context Comparator', () => {
     expect(result.context.myVariable).to.equal('some text');
   });
 
-  it('Should automatically set multiple unnammed variables (*)', () => {
-    const input = '* is *';
+  it('Should automatically set multiple unnammed variables ({{*}})', () => {
+    const input = '{{*}} is {{*}}';
     const utterance = 'This bot is awesome';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -79,8 +79,8 @@ describe('Context Comparator', () => {
     expect(result.context.any_1).to.equal('awesome');
   });
 
-  it('Should automatically set multiple unnammed variables (^)', () => {
-    const input = '^ is ^';
+  it('Should automatically set multiple unnammed variables ({{^}})', () => {
+    const input = '{{^}} is {{^}}';
     const utterance = 'This bot is awesome';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -93,8 +93,8 @@ describe('Context Comparator', () => {
     expect(result.context.anyornothing_1).to.equal('awesome');
   });
 
-  it('Should automatically set multiple unnammed variables (^ not catch case)', () => {
-    const input = '^ your ^';
+  it('Should automatically set multiple unnammed variables ({{^}} not catch case)', () => {
+    const input = '{{^}} your {{^}}';
     const utterance = 'your awesome';
 
     const sentenceI = tokenizerInput.tokenize(input);

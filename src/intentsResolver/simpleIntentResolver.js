@@ -22,7 +22,7 @@ class SimpleIntentResolver extends IntentResolver {
     const result = inputs.map(input => {
       const comparatorResult = this.comparator.compare(input.tokenizedInput, sentence);
       // Case - Fallback (lower score) // NOT SO GOOD even with threshold + infitesimal
-      if (input.input === '*') {
+      if (input.input === '{{*}}' || input.input === '{{^}}') {
         comparatorResult.confidence = 0.75;
       }
       return {

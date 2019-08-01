@@ -22,22 +22,22 @@ const ctxt = {};
   nlp.addOutput('fr', 'agent.fallback', "J'essaie' de m'améliorer mais la je bloque...", 'fr');
   nlp.addOutput('fr', 'agent.fallback', 'Je ne comprends pas vraiment pas.', 'fr');
 
-  nlp.addInput('fr', 'agent.presentation', 'Bonjour^');
-  nlp.addInput('fr', 'agent.presentation', 'Coucou^');
-  nlp.addInput('fr', 'agent.presentation', 'Salut^');
-  nlp.addInput('fr', 'agent.presentation', 'Hello^');
+  nlp.addInput('fr', 'agent.presentation', 'Bonjour{{^}}');
+  nlp.addInput('fr', 'agent.presentation', 'Coucou{{^}}');
+  nlp.addInput('fr', 'agent.presentation', 'Salut{{^}}');
+  nlp.addInput('fr', 'agent.presentation', 'Hello{{^}}');
 
   nlp.addOutput('fr', 'agent.presentation', 'Coucou :)', 'fr');
 
-  nlp.addInput('fr', 'agent.askname', '^je suis {{name=*}}');
-  nlp.addInput('fr', 'agent.askname', "^je m'appelle {{name=*}}");
+  nlp.addInput('fr', 'agent.askname', '{{^}}je suis {{name=*}}');
+  nlp.addInput('fr', 'agent.askname', "{{^}}je m'appelle {{name=*}}");
 
   nlp.addOutput('fr', 'agent.askname', 'Hello {{name}}', 'fr');
 
-  nlp.addInput('fr', 'agent.bye', '^bye^');
-  nlp.addInput('fr', 'agent.bye', '^a la prochaine^');
-  nlp.addInput('fr', 'agent.bye', '^a plus^');
-  nlp.addInput('fr', 'agent.bye', '^bonne journée^');
+  nlp.addInput('fr', 'agent.bye', '{{^}}bye{{^}}');
+  nlp.addInput('fr', 'agent.bye', '{{^}}a la prochaine{{^}}');
+  nlp.addInput('fr', 'agent.bye', '{{^}}a plus{{^}}');
+  nlp.addInput('fr', 'agent.bye', '{{^}}bonne journée{{^}}');
 
   nlp.addOutput('fr', 'agent.bye', 'A la prochaine!', 'fr');
 

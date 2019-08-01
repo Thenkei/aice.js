@@ -21,7 +21,7 @@ describe('InputExpressionTokenizer', () => {
   });
 
   it('Simple InputExpressionTokenization - with NLX syntax', () => {
-    const input = '^ sometext *';
+    const input = '{{^}} sometext {{*}}';
 
     const sentenceI = inputExpressionTokenizer.tokenize(input);
     const it = sentenceI.values();
@@ -33,7 +33,7 @@ describe('InputExpressionTokenizer', () => {
   });
 
   it('Full InputExpressionTokenization - with NLX syntax', () => {
-    const input = '{{variable=@email}} @email';
+    const input = '{{variable=@email}} {{@email}}';
 
     const sentenceI = inputExpressionTokenizer.tokenize(input);
     const it = sentenceI.values();
@@ -47,6 +47,18 @@ describe('InputExpressionTokenizer', () => {
     expect(secondeNode.type).to.equal('ENTITY');
     expect(secondeNode.contextName).to.equal(undefined);
     expect(secondeNode.name).to.equal('email');
+
+    expect(it.next().done).to.equal(true);
+  });
+
+  it('Full InputExpressionTokenization - wrong NLX syntax', () => {
+    const input = '@email';
+
+    const sentenceI = inputExpressionTokenizer.tokenize(input);
+    const it = sentenceI.values();
+
+    const firstNode = it.next().value.expression;
+    expect(firstNode).to.equal(undefined);
 
     expect(it.next().done).to.equal(true);
   });

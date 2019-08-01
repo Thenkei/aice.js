@@ -24,7 +24,7 @@ describe('IntentResolverManager', () => {
     resolverManager.train([
       { lang: 'fr', intentid: 1, tokenizedInput: tokenizerInput.tokenize('Hello'), input: 'Hello' },
       { lang: 'fr', intentid: 2, tokenizedInput: tokenizerInput.tokenize('Bye'), input: 'Bye' },
-      { lang: 'fr', intentid: 3, tokenizedInput: tokenizerInput.tokenize('*'), input: '*' },
+      { lang: 'fr', intentid: 3, tokenizedInput: tokenizerInput.tokenize('{{*}}'), input: '{{*}}' },
     ]);
 
     const result = resolverManager.processBest('fr', tokenizerUtterance.tokenize('Bye'));

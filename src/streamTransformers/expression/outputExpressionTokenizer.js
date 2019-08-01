@@ -28,7 +28,7 @@ class OutputExpressionTokenizer {
      */
     this.expressionParser = new ExpressionParser([
       {
-        regex: /{{([^=]+?)}}/,
+        regex: /{{([^= }]+?)}}/,
         parser: match => {
           const contextName = match;
 
@@ -36,7 +36,7 @@ class OutputExpressionTokenizer {
         },
       },
       {
-        regex: /{{(.+?=.+?)}}/,
+        regex: /{{([^ ]+?=[^}]+?)}}/,
         parser: match => {
           const matchs = match.split('=');
 
@@ -47,7 +47,7 @@ class OutputExpressionTokenizer {
         },
       },
       {
-        regex: /<<(.+?=.+?)>>/,
+        regex: /<<([^ ]+?=[^>]+?)>>/,
         parser: match => {
           const matchs = match.split('=');
 

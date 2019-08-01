@@ -26,18 +26,7 @@ class InputExpressionTokenizer {
      * regex: the regex used to capture an expession
      * parser: the function used to parse the expession captured
      */
-    this.expressionParser = new ExpressionParser([
-      {
-        regex: /{{(.+?=.+?)}}/,
-        parser: match => {
-          const matchs = match.split('=');
-
-          const expression = this.expressionParser.parseFromText(matchs[1])[0];
-          const contextName = matchs[0];
-
-          return { ...expression.expression, contextName };
-        },
-      },
+    this.subExpressionParser = new ExpressionParser([
       {
         regex: /(\*)/,
         parser: () => ({ type: 'ANY' }),
@@ -49,6 +38,28 @@ class InputExpressionTokenizer {
       {
         regex: /@([\w_]+)/,
         parser: match => ({ type: 'ENTITY', name: match }),
+      },
+    ]);
+
+    /**
+     * regex: the regex used to capture an expession
+     * parser: the function used to parse the expession captured
+     */
+    this.expressionParser = new ExpressionParser([
+      {
+        regex: /{{([^ ]+?=[^ }]+?)}}/,
+        parser: match => {
+          const matchs = match.split('=');
+
+          const expression = this.subExpressionParser.parseFromText(matchs[1])[0];
+          const contextName = matchs[0];
+
+          return { ...expression.expression, contextName };
+        },
+      },
+      {
+        regex: /{{([^= }]+?)}}/,
+        parser: match => this.subExpressionParser.parseFromText(match)[0].expression,
       },
     ]);
   }
