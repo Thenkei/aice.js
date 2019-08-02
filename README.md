@@ -10,6 +10,8 @@
 <p align="center">
   <a href="#features">Features</a> •
   <a href="#how-to-install">How To install</a> •
+  <a href="#usages-example">Usages example</a> •
+  
   <a href="#contributing">Contributing</a>
 </p>
 
@@ -35,6 +37,90 @@ It can be installed directly from NPM to be integrated in node.js application.
 ```bash
     npm install aice.js
 ```
+
+## Usages example
+**Simple use case**
+```js
+const aice = new AICE();
+
+aice.addInput('en', 'hello', 'Hello');
+
+aice.addOutput('en', 'hello', "Hello. What's up ?");
+
+aice.train();
+
+// now you can use process to get the answer
+const response = await aice.process('Hello', {}, 'en');
+```
+
+```
+{
+  "answer":"Hello. What's up ?",
+  "score":1,
+  "intent":"hello",
+  "context":{}
+}
+```
+
+**Conditions use case**
+```js
+const nlp = new AICE();
+
+nlp.addInput('en', 'test.conditions', 'Test conditions');
+
+nlp.addOutput(
+  'en',
+  'test.conditions',
+  "This is a test of the conditions",
+  undefined,
+  [{
+      type: 'LeftRightExpression',
+      operande: 'eq',
+      Lvalue: { type: 'VARIABLE', value: 'state' },
+      Rvalue: 'STATE_0',
+   }]);
+
+nlp.train();
+
+// now you can use process to get the answer
+const response = await aice.process('Test condition', { state: 'STATE_0'}, 'en');
+```
+
+```
+{
+  "answer":"This is a test of the conditions",
+  "score":1,
+  "intent":"test.conditions",
+  "context":{"state":"STATE_0"}
+}
+```
+
+**Callable use case**
+```js
+const nlp = new AICE();
+
+// Add an input to the intent 'match.email'
+nlp.addInput('en', 'match.email', '{{userEmail=@email}}');
+
+// Add an output to the intent 'match.email'
+nlp.addOutput('en', 'match.email', "Thanks for your email. I'll send you some thing", undefined, undefined,
+  async context => {
+    const { userEmail } = context;
+    const text = 'Example of email body';
+    const mail = {
+      to: userEmail,
+      subject: 'Example of send mail',
+      text,
+      html: text,
+    };
+    await emailSender.sendMessage(mail);
+    return {};
+  });
+
+  nlp.train();
+```
+
+This will send a mail to userEmail catched by the entity @email. In this example the service emailSender as been created using node-mailer.
 
 ## NLX syntax (draft)
 **INPUT**
