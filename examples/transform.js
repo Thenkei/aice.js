@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) 2015-present, CWB SAS
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/* eslint-disable no-console */
+
 const bot = {
   name: 'OplaZap',
   description: 'Super bot de démonstration des fonctionnalités de la v0.3 après le sprint 1 (OplaZap)',
