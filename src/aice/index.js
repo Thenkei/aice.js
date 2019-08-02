@@ -13,7 +13,7 @@ const { NERTokenizer } = require('../streamTransformers/tokenizer');
 
 const { NERManager, SystemEntities } = require('../streamTransformers');
 
-// TEST PURPOSE
+// TODO Remove this for the v0.2.0
 const LANG = 'fr';
 
 class AICE {
@@ -35,19 +35,37 @@ class AICE {
     });
   }
 
+  /**
+   * Returns all entities.
+   */
   getAllEntities() {
     return this.NERManager.entities;
   }
 
+  /**
+   * Returns a normalized input
+   * Looks for the entities in a input and directly creates the NLX Syntax version.
+   * @param {Entity} namedEntity Derivated NamedEntity class.
+   */
   normalizeInputEntities(lang, inputText) {
     return this.NERManager.normalizeEntityUtterance(lang, inputText);
   }
 
+  /**
+   * Adds an entity.
+   * @param {Entity} namedEntity Devivated Entity class.
+   */
   addEntity(namedEntity) {
     if (this.NERManager.entities.filter(e => e.name === namedEntity.name).length === 0)
       this.NERManager.addNamedEntity(namedEntity);
   }
 
+  /**
+   * Adds a new input associated to an intent for the given language.
+   * @param {String} lang Language of the input.
+   * @param {String} intentid Intent name/id.
+   * @param {String} input Text of the input includes Input NLX syntax.
+   */
   addInput(lang, intentid, input) {
     if (!lang || !input || !intentid) {
       throw new Error('AICE addInput - Has some missing mandatory parameters');
@@ -60,6 +78,15 @@ class AICE {
     }
   }
 
+  /**
+   * Adds a new ouput associated to an intent for the given language.
+   * @param {String} lang Language of the output.
+   * @param {String} intentid Intent name/id.
+   * @param {String} output Text of the output can includes Output NLX syntax.
+   * @param {Function} preConditionsCallable Pre-Conditions callables executed before conditions. (should mutate context)
+   * @param {Array} conditions Conditions to be evaluated.
+   * @param {Function} preRenderCallable Pre-Render callables executed before redering only if conditions are checked. (can mutate context)
+   */
   addOutput(lang, intentid, output, preConditionsCallable = () => {}, conditions = [], preRenderCallable = () => {}) {
     if (!lang || !output || !intentid) {
       throw new Error('AICE addOutput - Has some missing mandatory parameters');
@@ -82,11 +109,17 @@ class AICE {
     }
   }
 
+  /**
+   * Removes all inputs and outputs
+   */
   clear() {
     this.inputs = [];
     this.outputs = [];
   }
 
+  /**
+   * Train all resolvers and renderers
+   */
   train() {
     this.IntentResolverManager.train(this.inputs);
     this.OutputRenderingManager.train(this.outputs);
