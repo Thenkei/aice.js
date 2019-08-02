@@ -11,8 +11,9 @@
   <a href="#features">Features</a> •
   <a href="#how-to-install">How To install</a> •
   <a href="#usages-example">Usages example</a> •
-  
-  <a href="#contributing">Contributing</a>
+  <a href="#nlx-syntax">NLX syntax</a> •
+  <a href="#contributing">Contributing</a> •
+  <a href="#more">More</a>
 </p>
 
 Artificial Intelligence Conversational Engine (AICE)
@@ -122,7 +123,7 @@ nlp.addOutput('en', 'match.email', "Thanks for your email. I'll send you some th
 
 This will send a mail to userEmail catched by the entity @email. In this example the service emailSender as been created using node-mailer.
 
-## NLX syntax (draft)
+## NLX syntax
 **INPUT**
 ```
 TEXT            I'm a text
