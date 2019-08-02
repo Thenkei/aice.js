@@ -92,17 +92,28 @@ class AICE {
     this.OutputRenderingManager.train(this.outputs);
   }
 
-  async process(utterance, context) {
+  /**
+   * Process an utterance to fully andersand it.
+   * The process is:
+   * - Streams Transformer: Tokenize the utterance and look for entities using NER
+   * - Intents Resolvers: Look for the user intention
+   * - Output Rendering: Handles callables, conditions and the rendering/generation of the answer.
+   * @param {String} utterance Text writen by the user
+   * @param {Object} context The context object
+   * @param {String} lang Default lang is french.
+   * @returns {reponse} An object containing: answer, score, intent, context
+   */
+  async process(utterance, context = {}, lang = LANG) {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
     const tokenizedUtterance = this.NERTokenizer.tokenize(utterance);
 
     // Intents Resolvers
-    const result = this.IntentResolverManager.processBest(LANG, tokenizedUtterance);
+    const result = this.IntentResolverManager.processBest(lang, tokenizedUtterance);
     context = { ...context, ...result[0].context };
 
     // Output Rendering
-    const answer = await this.OutputRenderingManager.process(LANG, result, context);
+    const answer = await this.OutputRenderingManager.process(lang, result, context);
 
     return {
       answer: (answer || {}).renderResponse,

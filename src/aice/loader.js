@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const AICE = require('./AICE');
+const AICE = require('.');
 
 const addIntent = (aice, { name: intentid, inputs, outputs, outputType, topic = '*', previous }, lang = 'fr') => {
   // IntentsInputs
