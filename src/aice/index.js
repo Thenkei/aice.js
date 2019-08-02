@@ -143,7 +143,7 @@ class AICE {
 
     // Intents Resolvers
     const result = this.IntentResolverManager.processBest(lang, tokenizedUtterance);
-    context = { ...context, ...result[0].context };
+    context = { ...context, ...((result && result[0]) || {}).context };
 
     // Output Rendering
     const answer = await this.OutputRenderingManager.process(lang, result, context);

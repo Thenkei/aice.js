@@ -12,6 +12,7 @@ class IntentResolver {
     }
     this.settings = settings || {};
     this.name = name;
+    this.inputs = [];
   }
 
   /**

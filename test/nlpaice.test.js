@@ -52,6 +52,16 @@ describe('AICE NLP', () => {
     expect(res.answer).to.equal('A la prochaine!');
   });
 
+  it('AICE - No intents', async () => {
+    const aice = new AICE();
+    aice.train();
+    const res = await aice.process('Hello', context, 'en');
+
+    expect(res.score).to.equal(0);
+    expect(res.intent).to.equal(undefined);
+    expect(res.answer).to.equal(undefined);
+  });
+
   it('AICE - API getAllEntities', () => {
     const aice = new AICE();
     expect(aice.getAllEntities().length).to.equal(SystemEntities.getSystemEntities().length);
