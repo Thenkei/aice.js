@@ -45,15 +45,16 @@ class AICE {
   /**
    * Returns a normalized input
    * Looks for the entities in a input and directly creates the NLX Syntax version.
-   * @param {Entity} namedEntity Derivated NamedEntity class.
+   * @param {String} lang Language of the input.
+   * @param {String} inputText The input text to be normalized.
    */
   normalizeInputEntities(lang, inputText) {
     return this.NERManager.normalizeEntityUtterance(lang, inputText);
   }
 
   /**
-   * Adds an entity.
-   * @param {Entity} namedEntity Devivated Entity class.
+   * Adds an named entity.
+   * @param {NamedEntity} namedEntity Devivated NamedEntity class.
    */
   addEntity(namedEntity) {
     if (this.NERManager.entities.filter(e => e.name === namedEntity.name).length === 0)
@@ -83,9 +84,9 @@ class AICE {
    * @param {String} lang Language of the output.
    * @param {String} intentid Intent name/id.
    * @param {String} output Text of the output can includes Output NLX syntax.
-   * @param {Function} preConditionsCallable Pre-Conditions callables executed before conditions. (should mutate context)
+   * @param {AsyncFunction} preConditionsCallable Pre-Conditions callables executed before conditions. (should mutate context)
    * @param {Array} conditions Conditions to be evaluated.
-   * @param {Function} preRenderCallable Pre-Render callables executed before redering only if conditions are checked. (can mutate context)
+   * @param {AsyncFunction} preRenderCallable Pre-Render callables executed before redering only if conditions are checked. (can mutate context)
    */
   addOutput(lang, intentid, output, preConditionsCallable = () => {}, conditions = [], preRenderCallable = () => {}) {
     if (!lang || !output || !intentid) {

@@ -18,7 +18,7 @@ class LazzyUnorderComparator extends Comparator {
   }
 
   /**
-   * Match two LinkedLists (Sentences)
+   * Match (LazzyUnorder strategy) two LinkedLists (Sentences)
    * @param {Sentence} linkedListI A linkedlist representing an input (can comporte expression from ExpressionParser)
    * @param {Sentence} linkedListU A linkedlist representing a utterance (can comporte expression from NER)
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)
@@ -82,7 +82,7 @@ class UnorderComparator extends Comparator {
   }
 
   /**
-   * Match two LinkedLists (Sentences)
+   * Match (Unorder strategy, kind of Jaccard) two LinkedLists (Sentences)
    * @param {Sentence} linkedListI A linkedlist representing an input (can comporte expression from ExpressionParser)
    * @param {Sentence} linkedListU A linkedlist representing a utterance (can comporte expression from NER)
    * @returns {result} match: true if it matched & context[] that will be used to change user context (contains capture / entities)

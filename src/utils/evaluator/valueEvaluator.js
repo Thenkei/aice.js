@@ -6,6 +6,11 @@
  */
 
 class ValueEvaluator {
+  /**
+   * Evaluate a value that can be a litteral or a variable that refer to context variable
+   * @param {Object} value
+   * @param {Object} context
+   */
   static evaluateValue(value, context) {
     if (typeof value !== 'object') {
       return value;

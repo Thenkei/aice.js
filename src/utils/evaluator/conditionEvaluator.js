@@ -8,6 +8,11 @@
 const ValueEvaluator = require('./valueEvaluator');
 
 class ConditionEvaluator {
+  /**
+   * Evaluate a condition
+   * @param {Object} condition a condition
+   * @param {Object} context context to refer context variables
+   */
   static evaluate(condition, context) {
     if (condition.type === 'LeftRightExpression') {
       return ConditionEvaluator.leftRightExpressionEvaluator(condition, context);
