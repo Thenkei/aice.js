@@ -13,8 +13,17 @@ const { ExactStrategy } = require('./strategies');
  * @class LazzyUnorderComparator
  */
 class LazzyUnorderComparator extends Comparator {
-  constructor(internalComparator = new ExactStrategy()) {
+  constructor(internalComparator = new ExactStrategy(), weighting = { default: 1, entities: 5 }) {
     super(internalComparator);
+    this.weighting = weighting;
+  }
+
+  /**
+   * Give the weighting for an input token
+   * @param {Object} expression InputExpression
+   */
+  getInputTokenWeight(expression) {
+    return expression ? this.weighting.entities : this.weighting.default;
   }
 
   /**
@@ -33,15 +42,23 @@ class LazzyUnorderComparator extends Comparator {
     result.iteratorGeneratorU = linkedListU.values();
     result.iteratorI = result.iteratorGeneratorI.next();
     result.iteratorU = result.iteratorGeneratorU.next();
+
+    // Initialization
+    // Max possible score for each Input tokens (except Unused expression ANY/ANYORNOTHING) add its weight to maxScore
+    let maxScore = 0;
     let score = 0;
-    let unusedExpression = 0;
 
     while (!result.iteratorI.done) {
       const { expression } = result.iteratorI.value;
       if (!expression || (expression && expression.type !== 'ANY' && expression.type !== 'ANYORNOTHING')) {
+        const tokenWeight = this.getInputTokenWeight(expression);
+        // Max possible score computation
+        maxScore += tokenWeight;
+
+        // Compare
         result = this.compareExpressions(result);
         if (result.match) {
-          score += 1;
+          score += tokenWeight;
           result.iteratorU = result.iteratorGeneratorU.next();
         } else {
           result.iteratorGeneratorU = linkedListU.values();
@@ -49,13 +66,11 @@ class LazzyUnorderComparator extends Comparator {
           while (!result.iteratorU.done && !result.match) {
             result = this.compareExpressions(result);
             if (result.match) {
-              score += 1;
+              score += tokenWeight;
             }
             result.iteratorU = result.iteratorGeneratorU.next();
           }
         }
-      } else {
-        unusedExpression += 1;
       }
       result.iteratorI = result.iteratorGeneratorI.next();
     }
@@ -64,8 +79,7 @@ class LazzyUnorderComparator extends Comparator {
     delete result.iteratorGeneratorI;
     delete result.iteratorI;
     delete result.iteratorU;
-
-    if (score !== 0) result.confidence = score / ([...linkedListI].length - unusedExpression);
+    if (score !== 0) result.confidence = score / maxScore;
     else result.confidence = 0;
     result.match = score > 0;
 
@@ -77,8 +91,17 @@ class LazzyUnorderComparator extends Comparator {
  * @class UnorderComparator
  */
 class UnorderComparator extends Comparator {
-  constructor(internalComparator = new ExactStrategy()) {
+  constructor(internalComparator = new ExactStrategy(), weighting = { default: 1, entities: 5 }) {
     super(internalComparator);
+    this.weighting = weighting;
+  }
+
+  /**
+   * Give the weighting for an input token
+   * @param {Object} expression InputExpression
+   */
+  getInputTokenWeight(expression) {
+    return expression ? this.weighting.entities : this.weighting.default;
   }
 
   /**
@@ -97,13 +120,20 @@ class UnorderComparator extends Comparator {
     result.iteratorGeneratorU = linkedListU.values();
     result.iteratorI = result.iteratorGeneratorI.next();
     result.iteratorU = result.iteratorGeneratorU.next();
+
+    // Max possible score for each Input tokens (except Unused expression ANY/ANYORNOTHING) add its weight to maxScore
+    let maxScore = 0;
     let score = 0;
-    let unusedExpression = 0;
     const bags = [];
 
     while (!result.iteratorI.done) {
       const { expression } = result.iteratorI.value;
       if (!expression || (expression && expression.type !== 'ANY' && expression.type !== 'ANYORNOTHING')) {
+        const tokenWeight = this.getInputTokenWeight(expression);
+        // Max possible score computation
+        maxScore += tokenWeight;
+
+        // Compare
         result = this.compareExpressions(result);
         if (result.match) {
           if (bags.length > 0) {
@@ -111,7 +141,7 @@ class UnorderComparator extends Comparator {
           } else {
             bags.push(result.iteratorU.value.text);
           }
-          score += 1;
+          score += tokenWeight;
           result.iteratorU = result.iteratorGeneratorU.next();
         } else {
           result.iteratorGeneratorU = linkedListU.values();
@@ -120,25 +150,22 @@ class UnorderComparator extends Comparator {
             result = this.compareExpressions(result);
             if (result.match) {
               bags.push(result.iteratorU.value.text);
-              score += 1;
+              score += tokenWeight;
             }
             result.iteratorU = result.iteratorGeneratorU.next();
           }
         }
-      } else {
-        unusedExpression += 1;
       }
       result.iteratorI = result.iteratorGeneratorI.next();
     }
     // Scoring
     if (score > 1) {
-      const normalizedScore = score / ([...linkedListI].length - unusedExpression);
+      const normalizedScore = score / maxScore;
       const entropy = (bags.length - 1) / (score - 1);
       result.confidence = normalizedScore * (1 - entropy ** 1.5 * 0.5);
     } else {
-      result.confidence = score / ([...linkedListI].length - unusedExpression);
+      result.confidence = score / maxScore;
     }
-
     result.match = score > 0;
 
     // Delete iterator from result

@@ -4,10 +4,14 @@ const { expect } = chai;
 
 const { LazzyUnorderComparator, UnorderComparator } = require('../../src/utils');
 
-const { InputExpressionTokenizer, ComplexeTokenizer } = require('../../src/streamTransformers');
+const { InputExpressionTokenizer, NERTokenizer, NERManager, SystemEntities } = require('../../src/streamTransformers');
 
 const tokenizerInput = new InputExpressionTokenizer();
-const tokenizerUtterance = ComplexeTokenizer;
+const ner = new NERManager();
+SystemEntities.getSystemEntities().forEach(e => {
+  ner.addNamedEntity(e);
+});
+const tokenizerUtterance = new NERTokenizer('en', ner);
 
 describe('LazzyUnorderComparator', () => {
   const simpleUnorderComparator = new LazzyUnorderComparator();
@@ -85,7 +89,7 @@ describe('LazzyUnorderComparator', () => {
   });
 
   it('Should not take in count ANY/ANYORNOTHING expressions', () => {
-    const input = '* You are awesome ^';
+    const input = '{{*}} You are awesome {{^}}';
     const utterance = 'You are awesome my friend';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -94,6 +98,30 @@ describe('LazzyUnorderComparator', () => {
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
+  });
+
+  it('Should weighting expressions - Match', () => {
+    const input = 'My email is {{@email}}';
+    const utterance = 'Email test@opla.ai';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.confidence).to.equal(0.75); // score: 6/8
+  });
+
+  it('Should weighting expressions - No match', () => {
+    const input = 'My email is {{@email}}';
+    const utterance = "I don't want to give you my email";
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.confidence).to.equal(0.25); // score: 2/8
   });
 });
 
@@ -133,7 +161,7 @@ describe('UnorderComparator', () => {
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
-    expect(result.confidence).to.be.closeTo(0.82, 0.1);
+    expect(result.confidence).to.be.closeTo(0.82, 0.01);
   });
 
   it('Should exact match same unordered Sentences', () => {
@@ -169,11 +197,11 @@ describe('UnorderComparator', () => {
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
-    expect(result.confidence).to.be.closeTo(0.82, 0.1);
+    expect(result.confidence).to.be.closeTo(0.82, 0.01);
   });
 
   it('Should not take in count ANY/ANYORNOTHING expressions', () => {
-    const input = '* You are awesome ^';
+    const input = '{{*}} You are awesome {{^}}';
     const utterance = 'You are awesome my friend';
 
     const sentenceI = tokenizerInput.tokenize(input);
@@ -182,5 +210,53 @@ describe('UnorderComparator', () => {
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
     expect(result.confidence).to.equal(1.0);
+  });
+
+  it('Should weighting expressions - Match', () => {
+    const input = 'My email is {{@email}}';
+    const utterance = 'Email test@opla.ai';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.confidence).to.be.closeTo(0.71, 0.01); // score: 6/8 but entropy lower the score
+  });
+
+  it('Should weighting expressions - Partial but relevant match', () => {
+    const input = 'My email is {{@email}}';
+    const utterance = 'test@opla.ai';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.confidence).to.be.closeTo(0.625, 0.01); // score: 5/8
+  });
+
+  it('Should weighting expressions - Full Match', () => {
+    const input = '{{@email}}';
+    const utterance = 'You just want an email here, so I give you my mail test@opla.ai';
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.confidence).to.be.equal(1);
+  });
+
+  it('Should weighting expressions - No match', () => {
+    const input = 'My email is {{@email}}';
+    const utterance = "I don't want to give you my email";
+
+    const sentenceI = tokenizerInput.tokenize(input);
+    const sentenceU = tokenizerUtterance.tokenize(utterance);
+
+    const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
+    expect(result.match).to.equal(true);
+    expect(result.confidence).to.equal(0.25); // score: 2/8
   });
 });
