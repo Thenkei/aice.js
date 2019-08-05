@@ -8,31 +8,31 @@ const { NERManager, SystemEntities } = require('../../src/streamTransformers');
 
 const { EmailRegExpEntity, UrlRegExpEntity } = SystemEntities;
 
-const LANG = 'fr';
+const LANG = 'en';
 
 describe('NER Tokenizer', () => {
   const ner = new NERManager();
   ner.addNamedEntity(UrlRegExpEntity);
   ner.addNamedEntity(EmailRegExpEntity);
-  const nerTokenizer = new NERTokenizer(LANG, ner);
+  const nerTokenizer = new NERTokenizer(ner);
 
   it('Should tokenize (with NER pipe) - One Token', () => {
     const textToTokenize = 'jeff@opla.ai';
-    const tokenized = nerTokenizer.tokenize(textToTokenize);
+    const tokenized = nerTokenizer.tokenize(LANG, textToTokenize);
 
     expect(tokenized.get(0).value.ner.match).to.equal('jeff@opla.ai');
   });
 
   it('Should tokenize (with NER pipe) - Multiple Token', () => {
     const textToTokenize = 'My email is jeff@opla.ai';
-    const tokenized = nerTokenizer.tokenize(textToTokenize);
+    const tokenized = nerTokenizer.tokenize(LANG, textToTokenize);
 
     expect(tokenized.get(3).value.ner.match).to.equal('jeff@opla.ai');
   });
 
   it('Should tokenize (with NER pipe) - Multiple Token Entities', () => {
     const textToTokenize = 'My email adresse is opla@opla.ai and I love my website www.opla.fr';
-    const tokenized = nerTokenizer.tokenize(textToTokenize);
+    const tokenized = nerTokenizer.tokenize(LANG, textToTokenize);
 
     const emailToken = tokenized.get(4);
     expect(emailToken.value.ner.match).to.equal('opla@opla.ai');
@@ -47,7 +47,7 @@ describe('NER Tokenizer', () => {
 
   it('Should tokenize (with NER pipe) - Multiple Token (text after entity)', () => {
     const textToTokenize = 'My email adresse is opla@opla.ai and I love you';
-    const tokenized = nerTokenizer.tokenize(textToTokenize);
+    const tokenized = nerTokenizer.tokenize(LANG, textToTokenize);
 
     const emailToken = tokenized.get(4);
     expect(emailToken.value.ner.match).to.equal('opla@opla.ai');
@@ -56,8 +56,6 @@ describe('NER Tokenizer', () => {
   });
 
   it('NERTokenizer - Should throw error required constructor parameters', () => {
-    expect(() => new NERTokenizer()).to.throw(
-      'Invalid NERTokenizer constructor - NamedEntityRecognizer & lang are required',
-    );
+    expect(() => new NERTokenizer()).to.throw('Invalid NERTokenizer constructor - NamedEntityRecognizer is required');
   });
 });

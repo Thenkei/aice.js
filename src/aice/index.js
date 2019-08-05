@@ -23,7 +23,7 @@ class AICE {
     this.outputs = [];
     // StreamsTransformers
     this.NERManager = new NERManager();
-    this.NERTokenizer = new NERTokenizer(LANG, this.NERManager);
+    this.NERTokenizer = new NERTokenizer(this.NERManager);
     this.InputExpressionTokenizer = new InputExpressionTokenizer();
     this.OutputExpressionTokenizer = new OutputExpressionTokenizer();
 
@@ -140,7 +140,7 @@ class AICE {
   async process(utterance, context = {}, lang = LANG) {
     // Streams Transformer
     // Tokenize the utterance and look for entities using NER
-    const tokenizedUtterance = this.NERTokenizer.tokenize(utterance);
+    const tokenizedUtterance = this.NERTokenizer.tokenize(lang, utterance);
 
     // Intents Resolvers
     const result = this.IntentResolverManager.processBest(lang, tokenizedUtterance);

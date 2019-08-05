@@ -11,7 +11,8 @@ const ner = new NERManager();
 SystemEntities.getSystemEntities().forEach(e => {
   ner.addNamedEntity(e);
 });
-const tokenizerUtterance = new NERTokenizer('en', ner);
+const tokenizerUtterance = new NERTokenizer(ner);
+const LANG = 'en';
 
 describe('LazzyUnorderComparator', () => {
   const simpleUnorderComparator = new LazzyUnorderComparator();
@@ -21,7 +22,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = 'you are slim';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
@@ -33,7 +34,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = 'Hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -45,7 +46,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = 'My friend Hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -57,7 +58,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = 'My Hello friend';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -69,7 +70,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = 'Je suis beau, et vous aussi, vous êtes beau.';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -81,7 +82,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = 'Vous êtes beau, et moi aussi, je suis beau.';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -93,7 +94,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = 'You are awesome my friend';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -105,7 +106,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = 'Email test@opla.ai';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -117,7 +118,7 @@ describe('LazzyUnorderComparator', () => {
     const utterance = "I don't want to give you my email";
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -133,7 +134,7 @@ describe('UnorderComparator', () => {
     const utterance = 'you are slim';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
@@ -145,7 +146,7 @@ describe('UnorderComparator', () => {
     const utterance = 'Hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -157,7 +158,7 @@ describe('UnorderComparator', () => {
     const utterance = 'My friend Hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -169,7 +170,7 @@ describe('UnorderComparator', () => {
     const utterance = 'My Hello friend';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -181,7 +182,7 @@ describe('UnorderComparator', () => {
     const utterance = 'Je suis beau, et vous aussi, vous êtes beau.';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -193,7 +194,7 @@ describe('UnorderComparator', () => {
     const utterance = 'Vous êtes beau, et moi aussi, je suis beau.';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -205,7 +206,7 @@ describe('UnorderComparator', () => {
     const utterance = 'You are awesome my friend';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -217,7 +218,7 @@ describe('UnorderComparator', () => {
     const utterance = 'Email test@opla.ai';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -229,7 +230,7 @@ describe('UnorderComparator', () => {
     const utterance = 'test@opla.ai';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -241,7 +242,7 @@ describe('UnorderComparator', () => {
     const utterance = 'You just want an email here, so I give you my mail test@opla.ai';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -253,7 +254,7 @@ describe('UnorderComparator', () => {
     const utterance = "I don't want to give you my email";
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleUnorderComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);

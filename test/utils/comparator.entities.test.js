@@ -23,7 +23,7 @@ describe('Entities Comparator', () => {
       enumeration: [{ key: 'S', values: ['small'] }, { key: 'M', values: ['medium'] }, { key: 'L', values: ['large'] }],
     }),
   );
-  const tokenizerUtterance = new NERTokenizer(LANG, ner);
+  const tokenizerUtterance = new NERTokenizer(ner);
   const tokenizerInput = new InputExpressionTokenizer();
   const simpleComparator = new Comparator();
 
@@ -36,7 +36,7 @@ describe('Entities Comparator', () => {
     const utterance = 'john@doe.com';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -48,7 +48,7 @@ describe('Entities Comparator', () => {
     const utterance = 'john@doe.com';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);
@@ -61,7 +61,7 @@ describe('Entities Comparator', () => {
     const utterance = 'hello';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
@@ -72,7 +72,7 @@ describe('Entities Comparator', () => {
     const utterance = 'test@opla.ai';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(false);
@@ -83,7 +83,7 @@ describe('Entities Comparator', () => {
     const utterance = 'small medium large';
 
     const sentenceI = tokenizerInput.tokenize(input);
-    const sentenceU = tokenizerUtterance.tokenize(utterance);
+    const sentenceU = tokenizerUtterance.tokenize(LANG, utterance);
 
     const result = simpleComparator.compare(sentenceI, sentenceU);
     expect(result.match).to.equal(true);

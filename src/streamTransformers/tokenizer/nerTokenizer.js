@@ -18,15 +18,14 @@ const isSeparator = charToken =>
   charToken < '!';
 
 class NERTokenizer {
-  constructor(lang, namedEntityRecognizer) {
-    if (!namedEntityRecognizer && !lang) {
-      throw new Error('Invalid NERTokenizer constructor - NamedEntityRecognizer & lang are required');
+  constructor(namedEntityRecognizer) {
+    if (!namedEntityRecognizer) {
+      throw new Error('Invalid NERTokenizer constructor - NamedEntityRecognizer is required');
     }
     this.namedEntityRecognizer = namedEntityRecognizer;
-    this.lang = lang;
   }
 
-  tokenize(stream, list = new DoubleLinkedList(), normalize = true) {
+  tokenize(lang, stream, list = new DoubleLinkedList(), normalize = true) {
     const normalized = normalize ? stream.normalize('NFD').replace(/[\u0300-\u036f]/g, '') : stream;
     const appendToken = (acc, entity = {}) => {
       if (acc !== '') {
@@ -34,7 +33,7 @@ class NERTokenizer {
       }
     };
 
-    const entities = this.namedEntityRecognizer.findEntitiesFromUtterance(this.lang, normalized);
+    const entities = this.namedEntityRecognizer.findEntitiesFromUtterance(lang, normalized);
     const sortEntities = entities.sort((e1, e2) => e1.start - e2.start);
 
     let acc = '';
