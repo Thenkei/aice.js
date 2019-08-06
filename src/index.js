@@ -6,7 +6,9 @@
  */
 
 const AICE = require('./aice/');
+const Tools = require('./aice/tools');
 
 module.exports = {
   AICE,
+  Tools,
 };
