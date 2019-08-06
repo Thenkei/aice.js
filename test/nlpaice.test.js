@@ -121,4 +121,14 @@ describe('AICE NLP', () => {
     const normalizedEntities = aice.normalizeInputEntities('fr', 'My informations are: example@mail.com 0625475309');
     expect(normalizedEntities).to.equal('My informations are: @email @phonenumber');
   });
+
+  it('AICE - API getAllVariables', () => {
+    const aice = new AICE();
+
+    aice.addInput('fr', 'agent.askname', "{{^}} je m'appelle {{name=*}}");
+    aice.addInput('fr', 'agent.askmail', 'My mail is {{email=@email}} {{^}}');
+
+    const variables = aice.getAllVariables();
+    expect(variables).to.eql(['anyornothing', 'name', 'email']);
+  });
 });

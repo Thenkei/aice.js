@@ -43,6 +43,22 @@ class AICE {
   }
 
   /**
+   * Returns all variables.
+   */
+  getAllVariables() {
+    const variables = this.inputs.reduce((acc, i) => {
+      const { tokenizedInput } = i;
+      for (const { expression } of tokenizedInput.values()) {
+        const variableName = expression && (expression.contextName || expression.type.toLowerCase());
+        if (variableName && !acc.includes(variableName)) acc.push(variableName);
+      }
+      return acc;
+    }, []);
+
+    return variables;
+  }
+
+  /**
    * Returns a normalized input
    * Looks for the entities in a input and directly creates the NLX Syntax version.
    * @param {String} lang Language of the input.
