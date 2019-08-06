@@ -2,7 +2,7 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const hammingDistance = require('../../src/utils/comparator/hamming');
+const hammingDistance = require('../../src/utils/comparator/wordsComparator/hamming');
 
 describe('Hamming distance', () => {
   const baseString = 'antidisestablishmentarianism';

@@ -6,7 +6,7 @@
  */
 
 const ContextMutator = require('../contextMutator');
-const { ExactStrategy } = require('./strategies');
+const { ExactStrategy } = require('./wordsComparator/strategies');
 
 const equalsText = (a, b) => a.length === b.length && a.every((t, i) => t.text === b[i].text);
 
@@ -14,8 +14,8 @@ const equalsText = (a, b) => a.length === b.length && a.every((t, i) => t.text =
  * @class Comparator
  */
 class Comparator {
-  constructor(internalComparator = new ExactStrategy()) {
-    this.comparator = internalComparator;
+  constructor(wordComparator = new ExactStrategy()) {
+    this.wordComparator = wordComparator;
   }
 
   /**
@@ -107,7 +107,7 @@ class Comparator {
           break;
         }
         const { text: textU } = result.iteratorU.value;
-        const res = this.comparator.compare(text.toLowerCase(), textU.toLowerCase());
+        const res = this.wordComparator.compare(text.toLowerCase(), textU.toLowerCase());
         // TODO handle comparison score we may lower
         // result.confidence = ((result.size - 1) / result.size) * result.confidence + (1 / result.size) * res.score;
         result.match = res.match;

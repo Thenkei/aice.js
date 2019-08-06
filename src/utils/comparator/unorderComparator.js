@@ -7,14 +7,14 @@
 
 const { Comparator } = require('./comparator');
 
-const { ExactStrategy } = require('./strategies');
+const { ExactStrategy } = require('./wordsComparator');
 
 /**
  * @class LazzyUnorderComparator
  */
 class LazzyUnorderComparator extends Comparator {
-  constructor(internalComparator = new ExactStrategy(), weighting = { default: 1, entities: 5 }) {
-    super(internalComparator);
+  constructor(wordComparator = new ExactStrategy(), weighting = { default: 1, entities: 5 }) {
+    super(wordComparator);
     this.weighting = weighting;
   }
 
@@ -91,8 +91,8 @@ class LazzyUnorderComparator extends Comparator {
  * @class UnorderComparator
  */
 class UnorderComparator extends Comparator {
-  constructor(internalComparator = new ExactStrategy(), weighting = { default: 1, entities: 5 }) {
-    super(internalComparator);
+  constructor(wordComparator = new ExactStrategy(), weighting = { default: 1, entities: 5 }) {
+    super(wordComparator);
     this.weighting = weighting;
   }
 

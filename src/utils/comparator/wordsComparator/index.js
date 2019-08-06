@@ -5,19 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { Comparator } = require('./comparator');
-const { UnorderComparator, LazzyUnorderComparator } = require('./unorderComparator');
 const {
   StrategyWordComparator,
   ExactStrategy,
   LevenshteinStrategy,
   DamerauLevenshteinStrategy,
-} = require('./wordsComparator');
+} = require('./strategies');
 
 module.exports = {
-  Comparator,
-  UnorderComparator,
-  LazzyUnorderComparator,
   StrategyWordComparator,
   ExactStrategy,
   LevenshteinStrategy,

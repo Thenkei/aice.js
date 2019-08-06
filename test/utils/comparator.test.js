@@ -2,7 +2,7 @@ const chai = require('chai');
 
 const { expect } = chai;
 
-const { StrategyComparator, Comparator, LevenshteinStrategy, DamerauLevenshteinStrategy } = require('../../src/utils');
+const { StrategyWordComparator, Comparator, LevenshteinStrategy, DamerauLevenshteinStrategy } = require('../../src/utils');
 
 const { InputExpressionTokenizer } = require('../../src/streamTransformers');
 
@@ -407,12 +407,12 @@ describe('Expression Any/AnyOrNothing levenshteinComparator', () => {
   });
 });
 
-describe('Abtract class - StrategyComparator', () => {
-  const abstractComparator = new StrategyComparator('abstract');
+describe('Abtract class - StrategyWordComparator', () => {
+  const abstractComparator = new StrategyWordComparator('abstract');
 
   it('Should throw an error if no compare definition', () => {
     expect(() => abstractComparator.compare()).to.throw(
-      'StrategyComparator - Cannot use compare function on abstract class',
+      'StrategyWordComparator - Cannot use compare function on abstract class',
     );
   });
 });

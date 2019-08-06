@@ -1,18 +1,18 @@
 const Levenshtein = require('./levenshtein');
 const Damerau = require('./damerau');
 
-class StrategyComparator {
+class StrategyWordComparator {
   constructor(name) {
     this.name = name;
   }
 
   // eslint-disable-next-line class-methods-use-this
   compare() {
-    throw new Error('StrategyComparator - Cannot use compare function on abstract class');
+    throw new Error('StrategyWordComparator - Cannot use compare function on abstract class');
   }
 }
 
-class ExactStrategy extends StrategyComparator {
+class ExactStrategy extends StrategyWordComparator {
   constructor() {
     super('exact-comparator');
     this.score = 1.0;
@@ -24,7 +24,7 @@ class ExactStrategy extends StrategyComparator {
   }
 }
 
-class LevenshteinStrategy extends StrategyComparator {
+class LevenshteinStrategy extends StrategyWordComparator {
   constructor(threshold = 0.49) {
     super('levenshtein-comparator');
     this.threshold = threshold;
@@ -41,7 +41,7 @@ class LevenshteinStrategy extends StrategyComparator {
   }
 }
 
-class DamerauLevenshteinStrategy extends StrategyComparator {
+class DamerauLevenshteinStrategy extends StrategyWordComparator {
   constructor(cutoffDamerauScoreFunc = a => (a.length > 4 ? 2 : 1)) {
     super('damerau-levenshtein-comparator');
     this.cutoffDamerauScoreFunc = cutoffDamerauScoreFunc;
@@ -60,4 +60,4 @@ class DamerauLevenshteinStrategy extends StrategyComparator {
   }
 }
 
-module.exports = { StrategyComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy };
+module.exports = { StrategyWordComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy };
