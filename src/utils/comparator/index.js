@@ -13,6 +13,7 @@ const {
   LevenshteinStrategy,
   DamerauLevenshteinStrategy,
 } = require('./wordsComparator');
+const { NeedlemanComparator } = require('./needlemanComparator');
 
 module.exports = {
   Comparator,
@@ -22,4 +23,5 @@ module.exports = {
   ExactStrategy,
   LevenshteinStrategy,
   DamerauLevenshteinStrategy,
+  NeedlemanComparator,
 };
