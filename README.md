@@ -7,10 +7,10 @@
   AIce.js
 </h1>
 
-[![CircleCI](https://circleci.com/gh/Opla/aice.js.svg?style=svg)](https://circleci.com/gh/Opla/aice.js)
-[![Commits](https://img.shields.io/github/last-commit/opla/aice.js.svg)](https://img.shields.io/github/last-commit/opla/aice.js.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Opla/aice.js/issues)
+[![Commits](https://img.shields.io/github/last-commit/opla/aice.js.svg)](https://img.shields.io/github/last-commit/opla/aice.js.svg)
+[![CircleCI](https://circleci.com/gh/Opla/aice.js.svg?style=svg)](https://circleci.com/gh/Opla/aice.js)
 [![npm (scoped)](https://img.shields.io/npm/v/aice.js.svg)](https://www.npmjs.com/package/aice.js)
 
 <p align="center">
