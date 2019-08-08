@@ -9,6 +9,7 @@
 
 <div align="center">
 
+[![codecov](https://codecov.io/gh/Opla/aice.js/branch/master/graph/badge.svg)](https://codecov.io/gh/Opla/aice.js)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Opla/aice.js/issues)
 [![Commits](https://img.shields.io/github/last-commit/opla/aice.js.svg)](https://img.shields.io/github/last-commit/opla/aice.js.svg)
 [![CircleCI](https://img.shields.io/circleci/build/github/Opla/aice.js)](https://circleci.com/gh/Opla/aice.js/tree/master)

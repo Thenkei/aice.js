@@ -70,3 +70,5 @@ typings/
 cov
 
 .vscode
+
+.lcov
