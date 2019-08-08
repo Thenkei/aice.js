@@ -7,11 +7,14 @@
   AIce.js
 </h1>
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<div align="center">
+
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Opla/aice.js/issues)
 [![Commits](https://img.shields.io/github/last-commit/opla/aice.js.svg)](https://img.shields.io/github/last-commit/opla/aice.js.svg)
-[![CircleCI](https://circleci.com/gh/Opla/aice.js.svg?style=svg)](https://circleci.com/gh/Opla/aice.js)
-[![npm (scoped)](https://img.shields.io/npm/v/aice.js.svg)](https://www.npmjs.com/package/aice.js)
+[![CircleCI](https://img.shields.io/circleci/build/github/Opla/aice.js)](https://circleci.com/gh/Opla/aice.js/tree/master)
+[![npm](https://img.shields.io/npm/v/aice.js?color=9cf)](https://www.npmjs.com/package/aice.js)
+
+</div>
 
 <p align="center">
   <a href="#features">Features</a> •
@@ -42,7 +45,7 @@ We want to build a sustainable solution able to guess several languages, to unde
 ## How to install
 It can be installed directly from NPM to be integrated in node.js application.
 ```bash
-    npm install aice.js
+npm install aice.js
 ```
 
 ## Usages example
