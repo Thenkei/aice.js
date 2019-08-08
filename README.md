@@ -1,3 +1,4 @@
+<div align="justify">
 <div align="center">
   <a href="https://opla.ai" target="_blank">
     <img src="https://raw.githubusercontent.com/Opla/opla/master/front/src/public/images/opla-avatar.png" alt="Opla" width="64">
@@ -10,9 +11,9 @@
 <div align="center">
 
 [![codecov](https://codecov.io/gh/Opla/aice.js/branch/master/graph/badge.svg)](https://codecov.io/gh/Opla/aice.js)
+[![CircleCI](https://img.shields.io/circleci/build/github/Opla/aice.js?logo=circleci)](https://circleci.com/gh/Opla/aice.js/tree/master)
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/Opla/aice.js/issues)
 [![Commits](https://img.shields.io/github/last-commit/opla/aice.js.svg)](https://img.shields.io/github/last-commit/opla/aice.js.svg)
-[![CircleCI](https://img.shields.io/circleci/build/github/Opla/aice.js)](https://circleci.com/gh/Opla/aice.js/tree/master)
 [![npm](https://img.shields.io/npm/v/aice.js?color=9cf)](https://www.npmjs.com/package/aice.js)
 
 </div>
@@ -174,3 +175,4 @@ It is still a WIP, but you could contribute, test, report bugs.
 
 How to pronounce it ?
 "A-Ice" /eɪ/ /ʌɪs/
+</div>
