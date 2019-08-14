@@ -1,5 +1,6 @@
 const Levenshtein = require('./levenshtein');
 const Damerau = require('./damerau');
+const Stemming = require('./stemming');
 
 class StrategyWordComparator {
   constructor(name) {
@@ -60,4 +61,24 @@ class DamerauLevenshteinStrategy extends StrategyWordComparator {
   }
 }
 
-module.exports = { StrategyWordComparator, ExactStrategy, LevenshteinStrategy, DamerauLevenshteinStrategy };
+class StemmingStrategy extends StrategyWordComparator {
+  constructor() {
+    super('Stemming-comparator');
+    this.score = 1.0;
+  }
+
+  compare(a, b) {
+    const c = Stemming(a);
+    const d = Stemming(b);
+    const result = { match: c === d, score: this.score };
+    return result;
+  }
+}
+
+module.exports = {
+  StrategyWordComparator,
+  ExactStrategy,
+  LevenshteinStrategy,
+  DamerauLevenshteinStrategy,
+  StemmingStrategy,
+};

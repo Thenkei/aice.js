@@ -10,6 +10,7 @@ const {
   ExactStrategy,
   LevenshteinStrategy,
   DamerauLevenshteinStrategy,
+  StemmingStrategy,
 } = require('./strategies');
 
 module.exports = {
@@ -17,4 +18,5 @@ module.exports = {
   ExactStrategy,
   LevenshteinStrategy,
   DamerauLevenshteinStrategy,
+  StemmingStrategy,
 };
