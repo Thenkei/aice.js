@@ -254,7 +254,6 @@ module.exports = input => {
     if (re.test(R2)) {
       ({ a, RV, R1, R2 } = replaceStrings(a, RV, R1, R2, suffix, 'log')); // logie => log
       isModified = suffix;
-      console.log(suffix, a);
     }
   } else if (contains(caseUsion, suffix)) {
     if (re.test(R2)) {
@@ -338,7 +337,6 @@ module.exports = input => {
     if (re.test(R1)) {
       ({ a, RV, R1, R2 } = replaceStrings(a, RV, R1, R2, suffix, 'al')); // aux => al
       isModified = suffix;
-      console.log(a, suffix);
     }
   } else if (contains(caseEuse, suffix)) {
     if (re.test(R2)) {
@@ -465,4 +463,4 @@ module.exports = input => {
   a = a.replace(/`(é|è)[^${vowelString}]+$`/, 'e');
 
   return a.toLowerCase();
-}
+};
