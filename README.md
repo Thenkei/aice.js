@@ -51,6 +51,16 @@ npm install aice.js
 ```
 
 ## Usages example
+
+**How to import**
+```js
+const { AICE } = from 'aice.js';
+```
+
+```js
+const { AICE } = require('aice.js');
+```
+
 **Simple use case**
 ```js
 const aice = new AICE();
