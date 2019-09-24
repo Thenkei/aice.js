@@ -177,7 +177,7 @@ const bot = {
 };
 
 const fs = require('fs');
-const OpenNLXSyntaxAdapter = require('../src/utils/openNLXSyntaxAdapter');
+const OpenNLXSyntaxAdapter = require('../../src/utils/openNLXSyntaxAdapter');
 
 const json = JSON.stringify(OpenNLXSyntaxAdapter(bot));
 

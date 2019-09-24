@@ -9,7 +9,7 @@
 const readline = require('readline');
 
 const threshold = 0.5;
-const { AICE } = require('../src/');
+const { AICE } = require('../../src');
 
 const BOT_NAME = 'jarvich';
 const isSilent = process.argv[2] === '--silent';

@@ -9,7 +9,7 @@
 const readline = require('readline');
 
 const threshold = 0.5;
-const Loader = require('../src/aice/loader');
+const Loader = require('../../src/aice/loader');
 
 const BOT_NAME = 'jarvich';
 const isSilent = process.argv[2] === '--silent';
@@ -298,7 +298,7 @@ const bot = {
   ],
 };
 
-const { EnumEntity } = require('../src/streamTransformers');
+const { EnumEntity } = require('../../src/streamTransformers');
 
 const SizeEnumEntity = new EnumEntity({
   name: 'pizzasize',
