@@ -20,6 +20,7 @@
       "singleQuote": true,
       "printWidth": 120
     }],
-    "no-restricted-syntax": [0, "ForOfStatement"]
+    "no-restricted-syntax": [0, "ForOfStatement"],
+    "max-classes-per-file": 0
   }
 }
